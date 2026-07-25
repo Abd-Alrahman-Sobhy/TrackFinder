@@ -1,0 +1,237 @@
+@model TrackFinder.ViewModels.Auth_ViewModels.RegisterVM
+@{
+    ViewData["Title"] = "Create Account";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<!-- ── Header ─────────────────────────────────────────────────── -->
+<div class="auth-header">
+    <img src="~/images/Logo.png" alt="Track Finder Logo" class="auth-logo" />
+    <div class="auth-brand">Track Finder</div>
+    <div class="auth-tagline">CS Learning Portal</div>
+</div>
+
+<!-- ── Card ──────────────────────────────────────────────────── -->
+<div class="auth-card" style="max-width:520px;">
+    <h1 style="font-size:22px;font-weight:700;color:#0b1c30;margin-bottom:4px;">Create Account</h1>
+    <p style="font-size:14px;color:#3f4850;margin-bottom:20px;">Join thousands of CS learners today.</p>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div>@Html.ValidationSummary(true, "Please fix the errors below.")</div>
+        </div>
+    }
+
+    <form asp-action="Index" asp-controller="Registration" method="post"
+          enctype="multipart/form-data" id="registerForm" novalidate>
+        @Html.AntiForgeryToken()
+
+        <!-- ── Role Toggle ───────────────────────────────────── -->
+        <p style="font-size:13px;color:#3f4850;margin-bottom:8px;">I am registering as a...</p>
+        <div class="role-toggle" role="group" aria-label="Select account type">
+            <button type="button" class="role-toggle-btn active" id="reg-btn-student"
+                    onclick="setRegRole('Student')">Student</button>
+            <button type="button" class="role-toggle-btn" id="reg-btn-instructor"
+                    onclick="setRegRole('Instructor')">Instructor</button>
+        </div>
+        <input type="hidden" asp-for="Role" id="regRoleInput" value="@(Model?.Role ?? "Student")" />
+
+        <!-- ── Name Row ──────────────────────────────────────── -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="FirstName">First Name</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <input asp-for="FirstName" class="form-input" placeholder="Ahmed" autocomplete="given-name" />
+                </div>
+                <span asp-validation-for="FirstName" class="field-error"></span>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="LastName">Last Name</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <input asp-for="LastName" class="form-input" placeholder="Ehab" autocomplete="family-name" />
+                </div>
+                <span asp-validation-for="LastName" class="field-error"></span>
+            </div>
+        </div>
+        <div style="margin-bottom:18px;"></div>
+
+        <!-- ── Username ──────────────────────────────────────── -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Username">Username</label>
+            <div class="input-wrapper">
+                <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg></span>
+                <input asp-for="Username" class="form-input" placeholder="ahmed_ehab" autocomplete="username" />
+            </div>
+            <span asp-validation-for="Username" class="field-error"></span>
+        </div>
+
+        <!-- ── Email ─────────────────────────────────────────── -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Email">Email Address</label>
+            <div class="input-wrapper">
+                <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg></span>
+                <input asp-for="Email" class="form-input" type="email" placeholder="you@university.edu" autocomplete="email" />
+            </div>
+            <span asp-validation-for="Email" class="field-error"></span>
+        </div>
+
+        <!-- ── Password Row ──────────────────────────────────── -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="Password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                    <input asp-for="Password" class="form-input" type="password" id="regPassword" placeholder="Min. 8 characters" autocomplete="new-password" />
+                </div>
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                    <input asp-for="ConfirmPassword" class="form-input" type="password" placeholder="Repeat password" autocomplete="new-password" />
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+            </div>
+        </div>
+        <div style="margin-bottom:18px;"></div>
+
+        <!-- ── Gender + Birthdate Row ─────────────────────────── -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="Gender">Gender</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
+                    <select asp-for="Gender" class="form-input">
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Gender" class="field-error"></span>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" asp-for="Birthdate">Date of Birth</label>
+                <div class="input-wrapper">
+                    <span class="input-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                    <input asp-for="Birthdate" class="form-input" type="date"
+                           max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                </div>
+                <span asp-validation-for="Birthdate" class="field-error"></span>
+            </div>
+        </div>
+
+        <!-- ── Instructor-only section ────────────────────────── -->
+        <div id="instructorSection" style="display:none;">
+            <div class="info-box">
+                <strong>📋 Instructor Registration</strong><br />
+                After email verification, your account will be reviewed by our admin team before
+                activation. This usually takes 1–3 business days. You'll be notified by email.
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Upload Your CV <span style="color:#ba1a1a;">*</span></label>
+                <div class="file-upload-area" id="dropZone">
+                    <input type="file" asp-for="CvFile" id="cvFileInput"
+                           accept=".pdf" aria-label="Upload CV PDF" />
+                    <div id="uploadDefault">
+                        <div class="file-upload-icon">📄</div>
+                        <p class="file-upload-text">
+                            <strong>Click to upload</strong> or drag and drop
+                        </p>
+                        <p class="file-upload-hint">PDF only · Max 5 MB</p>
+                    </div>
+                    <div id="uploadSelected" style="display:none;">
+                        <div class="file-upload-icon">✅</div>
+                        <p class="file-upload-name" id="selectedFileName"></p>
+                        <p class="file-upload-hint">Click to change file</p>
+                    </div>
+                </div>
+                <span asp-validation-for="CvFile" class="field-error"></span>
+            </div>
+        </div>
+
+        <!-- ── Submit ────────────────────────────────────────── -->
+        <button type="submit" class="btn-primary" id="registerBtn">Create Account</button>
+
+        <div style="text-align:center;margin-top:18px;">
+            <span style="font-size:13px;color:#6f7881;">Already have an account?</span>
+            <a href="/Login" style="font-size:13px;color:#006191;font-weight:600;text-decoration:none;margin-left:4px;">Sign In</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+    // ── Role Toggle ───────────────────────────────────────────────────
+    function setRegRole(role) {
+        document.getElementById('regRoleInput').value = role;
+        const btnStudent    = document.getElementById('reg-btn-student');
+        const btnInstructor = document.getElementById('reg-btn-instructor');
+        const instructorSec = document.getElementById('instructorSection');
+
+        if (role === 'Student') {
+            btnStudent.classList.add('active');
+            btnInstructor.classList.remove('active');
+            instructorSec.style.display = 'none';
+        } else {
+            btnInstructor.classList.add('active');
+            btnStudent.classList.remove('active');
+            instructorSec.style.display = 'block';
+        }
+    }
+
+    // Show instructor section if role was pre-selected (e.g. after failed validation)
+    if (document.getElementById('regRoleInput').value === 'Instructor') {
+        setRegRole('Instructor');
+    }
+
+    // ── CV file upload UI ─────────────────────────────────────────────
+    const fileInput   = document.getElementById('cvFileInput');
+    const dropZone    = document.getElementById('dropZone');
+    const defaultView = document.getElementById('uploadDefault');
+    const selectedView= document.getElementById('uploadSelected');
+    const fileNameEl  = document.getElementById('selectedFileName');
+
+    fileInput?.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            showFile(this.files[0]);
+        }
+    });
+
+    function showFile(file) {
+        fileNameEl.textContent = file.name;
+        defaultView.style.display = 'none';
+        selectedView.style.display = 'block';
+    }
+
+    // Drag-and-drop
+    dropZone?.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    dropZone?.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone?.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            fileInput.files = e.dataTransfer.files;
+            showFile(file);
+        }
+    });
+
+    // ── Submit loading state ──────────────────────────────────────────
+    document.getElementById('registerForm').addEventListener('submit', function () {
+        const btn = document.getElementById('registerBtn');
+        btn.disabled = true;
+        btn.textContent = 'Creating Account...';
+    });
+</script>
+}

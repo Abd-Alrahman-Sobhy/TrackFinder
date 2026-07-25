@@ -1,0 +1,39 @@
+@model IEnumerable<TrackFinder.ViewModels.Tracks.TrackListViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Tracks</h3>
+    <a class="btn btn-primary" asp-controller="Tracks" asp-action="Create">New Track</a>
+</div>
+
+<table class="table table-hover bg-white shadow-sm rounded">
+    <thead>
+        <tr>
+            <th>Track Name</th>
+            <th>Description</th>
+            <th>Roadmap</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model ?? Enumerable.Empty<TrackFinder.ViewModels.Tracks.TrackListViewModel>())
+        {
+            <tr>
+                <td>@item.TrackName</td>
+                <td class="text-truncate" style="max-width:320px">@item.TrackDescription</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.RoadMapUrl))
+                    {
+                        <a href="@item.RoadMapUrl" target="_blank">Open</a>
+                    }
+                </td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary me-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-sm btn-outline-secondary me-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

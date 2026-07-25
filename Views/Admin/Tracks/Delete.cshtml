@@ -1,0 +1,16 @@
+@model TrackFinder.ViewModels.Tracks.TrackDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Delete Track</h3>
+<form asp-action="DeleteConfirmed" asp-controller="Tracks" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div class="alert alert-danger">Are you sure you want to delete <strong>@Model.TrackName</strong>?</div>
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Tracks">Cancel</a>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

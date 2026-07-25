@@ -1,0 +1,85 @@
+@model TrackFinder.ViewModels.Users.UserDetailsViewModel
+@using System.Security.Claims
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isCurrentUser = currentUserId == Model.Id.ToString();
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-trash3-fill me-2"></i>
+            Delete User
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="alert alert-warning">
+            <h5 class="mb-2">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Warning
+            </h5>
+
+            Deleting this user is permanent and cannot be undone.
+        </div>
+
+        <table class="table table-bordered">
+            <tr>
+                <th width="200">Username</th>
+                <td>@Model.Username</td>
+            </tr>
+
+            <tr>
+                <th>Full Name</th>
+                <td>@Model.FirstName @Model.LastName</td>
+            </tr>
+
+            <tr>
+                <th>Email</th>
+                <td>@Model.Email</td>
+            </tr>
+
+            <tr>
+                <th>Role</th>
+                <td>@Model.Role</td>
+            </tr>
+        </table>
+
+        @if (isCurrentUser)
+        {
+            <div class="alert alert-danger mt-4">
+                <i class="bi bi-shield-exclamation me-2"></i>
+                <strong>You cannot delete your own administrator account.</strong>
+            </div>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back
+            </a>
+        }
+        else
+        {
+            <form asp-action="Delete" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input asp-for="Id" type="hidden" />
+
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash3 me-1"></i>
+                    Delete User
+                </button>
+
+                <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+                    Cancel
+                </a>
+
+            </form>
+        }
+
+    </div>
+</div>

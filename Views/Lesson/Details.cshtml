@@ -1,0 +1,138 @@
+@model TrackFinder.Models.CourseModels.Lesson
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var discountedPrice = Model.Discount.HasValue && Model.Discount > 0
+        ? Model.Price * (1 - (int)(Model.Discount.Value / 100))
+        : (double)Model.Price;
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-text">
+        <div class="header-breadcrumb">
+            <a asp-controller="CourseCreation" asp-action="Index">Courses</a>
+            @* @if (Model.CourseId.HasValue)
+            { *@
+            <span>›</span>
+            <a asp-controller="CourseCreation" asp-action="Details" asp-route-id="@Model.CourseId">Course Details</a>
+            @* } *@
+            <span>›</span>
+            <span>Lesson</span>
+        </div>
+        <h1>@Model.Name</h1>
+        <p>Lesson details and management.</p>
+    </div>
+    <div class="action-row">
+        @* @if (Model.CourseId.HasValue)
+        { *@
+        <a asp-controller="CourseCreation" asp-action="Details" asp-route-id="@Model.CourseId" class="btn btn-ghost btn-sm">← Course</a>
+        @* } *@
+        <a asp-controller="Lesson" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-sm">Edit Lesson</a>
+        <a asp-controller="Lesson" asp-action="Delete" asp-route-id="@Model.Id"
+           class="btn btn-danger btn-sm"
+           onclick="return confirm('Delete \'@Model.Name\' permanently?')">Delete</a>
+    </div>
+</div>
+
+<!-- Detail Cards Row -->
+<div class="info-grid-2" style="margin-bottom:24px;">
+    <!-- Duration -->
+    <div class="info-block">
+        <div class="ib-label">Duration</div>
+        @if (Model.Duration != null)
+        {
+            <div class="ib-value">@Model.Duration.Minutes<small style="font-size:14px;font-weight:500;">m</small> @Model.Duration.Seconds<small style="font-size:14px;font-weight:500;">s</small></div>
+        }
+        else
+        {
+            <div class="ib-value" style="color:var(--text-muted);font-size:16px;">Not set</div>
+        }
+    </div>
+
+    <!-- Price -->
+    <div class="info-block">
+        <div class="ib-label">Price</div>
+        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:4px;">
+            @if (Model.Discount.HasValue && Model.Discount > 0)
+            {
+                <span class="price-final" style="font-size:22px;">$@discountedPrice.ToString("N2")</span>
+                <span class="price-strike" style="font-size:14px;">$@Model.Price.ToString("N2")</span>
+                <span class="badge badge-amber">@Model.Discount% off</span>
+            }
+            else
+            {
+                <span class="ib-value large">$@Model.Price.ToString("N2")</span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Description -->
+<div class="card" style="margin-bottom:24px;">
+    <div class="card-title">Description</div>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p style="line-height:1.85;color:var(--text-dim);margin-top:12px;">@Model.Description</p>
+    }
+    else
+    {
+        <p style="color:var(--text-muted);font-style:italic;margin-top:12px;">No description provided for this lesson.</p>
+    }
+</div>
+
+<!-- Materials -->
+<div class="card" style="margin-bottom:24px;">
+    <div class="card-title">Materials <small style="font-weight:400;color:var(--text-muted);font-size:14px;">(@Model.Materials.Count)</small></div>
+    <div class="card-subtitle">Files uploaded for this lesson.</div>
+
+    @if (Model.Materials.Count == 0)
+    {
+        <p style="color:var(--text-muted);font-style:italic;margin-top:12px;">No materials uploaded yet.</p>
+    }
+    else
+    {
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+            @foreach (var m in Model.Materials)
+            {
+                var ext = System.IO.Path.GetExtension(m.FileName)?.ToLower();
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border-radius:8px;">
+                    <span style="font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;min-width:40px;">@ext</span>
+                    <span style="flex:1;">@m.FileName</span>
+                    <a asp-controller="Material" asp-action="Download" asp-route-id="@m.Id" class="btn btn-sm btn-ghost">Download</a>
+                </div>
+            }
+        </div>
+    }
+
+    <div style="margin-top:16px;">
+        <a asp-controller="Material" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">+ Upload Material</a>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card">
+    <div class="card-title">Quick Actions</div>
+    <div class="card-subtitle">Manage this lesson from here.</div>
+    <div class="action-row" style="margin-top:16px;flex-wrap:wrap;">
+        <a asp-controller="Lesson" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            Edit Details
+        </a>
+        @* @if (Model.CourseId.HasValue)
+        { *@
+        <a asp-controller="CourseCreation" asp-action="Details" asp-route-id="@Model.CourseId" class="btn btn-secondary">
+            View Full Course
+        </a>
+        <a asp-controller="Lesson" asp-action="Create" asp-route-id="@Model.CourseId" class="btn btn-ghost">
+            + Add Another Lesson
+        </a>
+        @* } *@
+        <a asp-controller="Lesson" asp-action="Delete" asp-route-id="@Model.Id"
+           class="btn btn-danger"
+           onclick="return confirm('Delete this lesson permanently?')">
+            Delete Lesson
+        </a>
+    </div>
+</div>

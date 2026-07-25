@@ -1,0 +1,66 @@
+@model TrackFinder.ViewModels.Students.EditStudentViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Edit Student</h3>
+<form asp-action="Edit" asp-controller="Students" method="post" asp-route-userId="@Model.UserId">
+    @Html.AntiForgeryToken()
+    <input asp-for="UserId" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="EducationState" class="form-label"></label>
+        <input asp-for="EducationState" class="form-control" />
+        <span asp-validation-for="EducationState" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SchoolOrUnversityName" class="form-label"></label>
+        <input asp-for="SchoolOrUnversityName" class="form-control" />
+        <span asp-validation-for="SchoolOrUnversityName" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="Major" class="form-label"></label>
+            <input asp-for="Major" class="form-control" />
+            <span asp-validation-for="Major" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Minor" class="form-label"></label>
+            <input asp-for="Minor" class="form-control" />
+            <span asp-validation-for="Minor" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="DegreeProgram" class="form-label"></label>
+            <input asp-for="DegreeProgram" class="form-control" />
+            <span asp-validation-for="DegreeProgram" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="AcademicYear" class="form-label"></label>
+            <input asp-for="AcademicYear" class="form-control" />
+            <span asp-validation-for="AcademicYear" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="GPA" class="form-label"></label>
+            <input asp-for="GPA" class="form-control" />
+            <span asp-validation-for="GPA" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bio" class="form-label"></label>
+        <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Students">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

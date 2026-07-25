@@ -1,0 +1,22 @@
+@model TrackFinder.ViewModels.Achievements.CertificateDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>@Model.Title</h3>
+    <div>
+        <a class="btn btn-outline-secondary me-1" asp-controller="Certificates" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-outline-danger" asp-controller="Certificates" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
+</div>
+
+<div class="card p-3 bg-white shadow-sm">
+    <p class="text-muted">@Model.Description</p>
+    @if(!string.IsNullOrEmpty(Model.CertificateUrl)){
+        <p><a href="@Model.CertificateUrl" target="_blank">Open Certificate</a></p>
+    }
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

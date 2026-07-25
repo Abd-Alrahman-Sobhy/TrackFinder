@@ -1,0 +1,36 @@
+@model IEnumerable<TrackFinder.ViewModels.Students.StudentListViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Students</h3>
+    <a class="btn btn-primary" asp-controller="Students" asp-action="Create">New Student</a>
+</div>
+
+<table class="table table-hover bg-white shadow-sm rounded">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>University</th>
+            <th>Major</th>
+            <th>GPA</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model ?? Enumerable.Empty<TrackFinder.ViewModels.Students.StudentListViewModel>())
+        {
+            <tr>
+                <td>@item.StudentName</td>
+                <td>@item.SchoolOrUnversityName</td>
+                <td>@item.Major</td>
+                <td>@item.GPA</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary me-1" asp-action="Details" asp-route-userId="@item.UserId">Details</a>
+                    <a class="btn btn-sm btn-outline-secondary me-1" asp-action="Edit" asp-route-userId="@item.UserId">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-userId="@item.UserId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

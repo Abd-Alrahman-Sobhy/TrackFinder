@@ -1,0 +1,16 @@
+@model TrackFinder.ViewModels.Settings.SettingDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Setting Details</h3>
+    <a class="btn btn-secondary" asp-action="Index" asp-controller="Settings">Back</a>
+</div>
+<div class="card p-3 bg-white shadow-sm">
+    <p><strong>Key:</strong> @Model.Key</p>
+    <p><strong>Value:</strong> @Model.Value</p>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

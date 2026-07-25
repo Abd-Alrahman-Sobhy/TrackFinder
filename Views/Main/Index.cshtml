@@ -1,0 +1,1189 @@
+@model TrackFinder.ViewModels.Profile_ViewModels.DashboardVM
+@using TrackFinder.Models.CommunityModels
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    
+    // Inject profile picture URL to the layout dynamically
+    ViewBag.ProfilePictureUrl = Model.User.ProfilePictureUrl;
+}
+
+<style>
+    /* ── Common Dashboard Components ────────────────────────── */
+    .dashboard-header-banner {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: var(--radius-lg);
+        padding: 36px 40px;
+        color: white;
+        margin-bottom: 32px;
+        box-shadow: var(--shadow-md);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dashboard-header-banner::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        top: -100px;
+        right: -50px;
+    }
+
+    .banner-welcome {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .banner-subtext {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 6px;
+    }
+
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-title span {
+        font-size: 14px;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    /* ── Stat Widget Grid (Instructors) ───────────────────────── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+        margin-bottom: 36px;
+    }
+
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 97, 145, 0.2);
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background: rgba(0, 97, 145, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 24px;
+    }
+
+    .stat-num {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--secondary);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    /* ── Roadmap Promo / Display ──────────────────────────────── */
+    .roadmap-container {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 28px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 36px;
+    }
+
+    .roadmap-promo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+    }
+
+    .promo-content {
+        max-width: 680px;
+    }
+
+    .promo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 97, 145, 0.08);
+        color: var(--primary);
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .promo-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 8px;
+    }
+
+    .promo-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+
+    .btn-action {
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        border: none;
+    }
+
+    .btn-action-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-action-primary:hover {
+        background: var(--primary-dark);
+        box-shadow: 0 4px 12px rgba(0, 97, 145, 0.2);
+    }
+
+    /* Track Path nodes visualization */
+    .track-nodes {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 24px;
+        overflow-x: auto;
+        padding: 12px 0;
+    }
+
+    .node {
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--secondary);
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .node.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .node-arrow {
+        color: var(--text-muted);
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    /* ── Course Grid / Cards ──────────────────────────────────── */
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 28px;
+        margin-bottom: 40px;
+    }
+
+    .course-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        flex-direction: column;
+        transition: var(--transition);
+    }
+
+    .course-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 97, 145, 0.15);
+    }
+
+    .course-img-wrapper {
+        height: 160px;
+        background: var(--secondary);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8fcdff;
+    }
+
+    .course-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .course-details {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .course-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    /* Progress bar */
+    .progress-section {
+        margin-bottom: 18px;
+    }
+
+    .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .progress-bar-bg {
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 99px;
+        transition: width 0.4s ease;
+    }
+
+    /* Course Specs metrics */
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+        margin-top: auto;
+    }
+
+    .spec-item {
+        text-align: center;
+    }
+
+    .spec-count {
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--secondary);
+    }
+
+    .spec-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-weight: 500;
+    }
+
+    /* ── Community feed ────────────────────────────────────────── */
+    .community-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 28px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .community-posts {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 20px 0 28px;
+    }
+
+    .post-card {
+        padding: 16px;
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        transition: var(--transition);
+    }
+
+    .post-card:hover {
+        border-color: rgba(0, 97, 145, 0.2);
+    }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .author-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        object-fit: cover;
+    }
+
+    .post-meta {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .post-author-name {
+        font-weight: 600;
+        color: var(--secondary);
+    }
+
+    .post-content {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    .empty-card {
+        text-align: center;
+        padding: 40px;
+        border: 1.5px dashed var(--border);
+        border-radius: var(--radius-md);
+        color: var(--text-muted);
+    }
+
+    .search-bar-form {
+        display: flex;
+        align-items: center;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 999px;
+        padding: 4px 4px 4px 16px;
+        transition: var(--transition);
+    }
+
+    .search-bar-form:focus-within {
+        background: rgba(255,255,255,0.25);
+        border-color: rgba(255,255,255,0.4);
+    }
+
+    .search-bar-input {
+        background: none;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 14px;
+        font-family: inherit;
+        min-width: 180px;
+    }
+
+    .search-bar-input::placeholder {
+        color: rgba(255,255,255,0.6);
+    }
+
+    .search-bar-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        border-radius: 50%;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition: var(--transition);
+    }
+
+    .search-bar-btn:hover {
+        background: rgba(255,255,255,0.35);
+    }
+
+    @@media (max-width: 768px) {
+        .dashboard-header-banner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .roadmap-promo {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- Welcome Header Banner -->
+<div class="dashboard-header-banner">
+    <div>
+        <div class="banner-welcome">Welcome back, @Model.User.FirstName! </div>
+        <div class="banner-subtext">Let's continue building your tech skill set today.</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <form asp-action="Search" asp-controller="Main" method="get" class="search-bar-form">
+            <input type="text" name="query" class="search-bar-input" placeholder="Search users by username..." autocomplete="off" />
+            <button type="submit" class="search-bar-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </button>
+        </form>
+        <div class="role-badge">
+            @Model.Role
+        </div>
+    </div>
+</div>
+
+@{
+    // Show full-page empty state when there is zero data
+    bool hasNoData = Model.Role.Equals("Student", StringComparison.OrdinalIgnoreCase)
+        ? !Model.EnrolledCourses.Any() && (Model.RecommendedTracks == null || !Model.RecommendedTracks.Any()) && !Model.RecentPosts.Any()
+        : !Model.CreatedCourses.Any() && !Model.RecentPosts.Any();
+}
+
+@if (hasNoData)
+{
+    <!-- Full-page empty state — shown when user has no data yet -->
+    <style>
+        .onboarding-wrapper {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1.5px dashed var(--border);
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+        .onboarding-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1f95d8 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .onboarding-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+        .onboarding-sub {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+        .onboarding-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+        .onboarding-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px 28px;
+            width: 240px;
+            text-align: left;
+            transition: var(--transition);
+        }
+        .onboarding-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .onboarding-card-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .onboarding-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 4px;
+        }
+        .onboarding-card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .onboarding-card-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 10px;
+        }
+        .preview-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 36px;
+        }
+        .preview-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            opacity: 0.7;
+        }
+        .preview-card-bar {
+            height: 14px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            width: 60%;
+        }
+        .preview-card-bar.short { width: 40%; }
+        .preview-card-bar.long { width: 80%; }
+        .preview-card-block {
+            height: 80px;
+            background: var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+        .preview-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .preview-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+        .preview-line {
+            height: 10px;
+            background: var(--border);
+            border-radius: 4px;
+            flex: 1;
+            margin-top: 6px;
+        }
+    </style>
+
+    <div class="onboarding-wrapper">
+        <div class="onboarding-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+        </div>
+        <div class="onboarding-title">Welcome to Track Finder!</div>
+        <div class="onboarding-sub">
+            Your dashboard is empty because you haven't started anything yet.
+            Here's a preview of what it will look like once you enroll in courses, join communities, and track your progress.
+        </div>
+    </div>
+
+    <!-- Preview mock cards showing what the dashboard will look like with data -->
+    <div class="preview-label">┃ Preview — this is what your dashboard will look like once you have data</div>
+
+    <div class="preview-grid">
+        <div class="preview-card">
+            <div class="preview-card-bar"></div>
+            <div class="preview-card-bar short"></div>
+            <div class="preview-card-block"></div>
+            <div class="preview-row">
+                <div class="preview-dot"></div>
+                <div class="preview-line"></div>
+            </div>
+        </div>
+        <div class="preview-card">
+            <div class="preview-card-bar"></div>
+            <div class="preview-card-bar short"></div>
+            <div class="preview-card-block"></div>
+            <div class="preview-row">
+                <div class="preview-dot"></div>
+                <div class="preview-line"></div>
+            </div>
+        </div>
+        <div class="preview-card">
+            <div class="preview-card-bar"></div>
+            <div class="preview-card-bar short"></div>
+            <div class="preview-card-block"></div>
+            <div class="preview-row">
+                <div class="preview-dot"></div>
+                <div class="preview-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick action cards to get started -->
+    <div class="onboarding-ctas">
+        <a href="/Courses" class="onboarding-card">
+            <div class="onboarding-card-icon">📚</div>
+            <div class="onboarding-card-title">Browse Courses</div>
+            <div class="onboarding-card-desc">Enroll in courses to start learning and earning progress.</div>
+            <div class="onboarding-card-arrow">
+                Explore Courses
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+        </a>
+        <a href="/Community" class="onboarding-card">
+            <div class="onboarding-card-icon">💬</div>
+            <div class="onboarding-card-title">Join Community</div>
+            <div class="onboarding-card-desc">Connect with peers, ask questions, and share knowledge.</div>
+            <div class="onboarding-card-arrow">
+                Visit Community
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+        </a>
+        <a href="/TrackProgress" class="onboarding-card">
+            <div class="onboarding-card-icon">📈</div>
+            <div class="onboarding-card-title">Track Progress</div>
+            <div class="onboarding-card-desc">Monitor your learning journey and achievements over time.</div>
+            <div class="onboarding-card-arrow">
+                View Progress
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+        </a>
+    </div>
+}
+
+else if (Model.Role.Equals("Student", StringComparison.OrdinalIgnoreCase))
+{
+    <!-- ── STUDENT VIEW ─────────────────────────────────────────── -->
+    
+    <!-- Section 1: Track & Roadmap -->
+    <div class="roadmap-container">
+        @if (Model.RecommendedTracks != null && Model.RecommendedTracks.Any())
+        {
+            var activeTrack = Model.RecommendedTracks.First();
+            <div class="roadmap-promo">
+                <div class="promo-content">
+                    <div class="promo-badge">⚡ Active Study Path</div>
+                    <div class="promo-title">@activeTrack.TrackName</div>
+                    <div class="promo-desc">@activeTrack.TrackDescription</div>
+                </div>
+                <a href="#" class="btn-action btn-action-primary">
+                    View Roadmap Details
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="track-nodes">
+                <div class="node active">Orientation</div>
+                <div class="node-arrow">→</div>
+                <div class="node active">Foundations</div>
+                <div class="node-arrow">→</div>
+                <div class="node">Core Technologies</div>
+                <div class="node-arrow">→</div>
+                <div class="node">Advanced Specialization</div>
+                <div class="node-arrow">→</div>
+                <div class="node">Capstone project</div>
+            </div>
+        }
+        else
+        {
+            <div class="roadmap-promo">
+                <div class="promo-content">
+                    <div class="promo-badge">⚡ AI Recommendation</div>
+                    <div class="promo-title">Find Your Tech Career Path</div>
+                    <div class="promo-desc">
+                        Not sure where to begin? Answer some questions about your career goals and interests. Our AI engine will analyze your skills and construct the optimal personalized pathway for your success.
+                    </div>
+                </div>
+                <!-- Redirects to questionnaire page -->
+                <a href="/Assessment" class="btn-action btn-action-primary">
+                    Start AI Assessment
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Section 2: Enrolled Courses -->
+    <h2 class="section-title">
+        My Enrolled Courses 
+        <span>(@Model.EnrolledCourses.Count active)</span>
+    </h2>
+
+    @if (Model.EnrolledCourses.Any())
+    {
+        <div class="course-grid">
+            @foreach (var enrollment in Model.EnrolledCourses)
+            {
+                var totalLessons = enrollment.Course.Lessons.Count;
+                var totalExams = enrollment.Course.Lessons.SelectMany(l => l.Exams!).Count();
+                var totalMaterials = enrollment.Course.Materials?.Count ?? 0;
+                
+                <a asp-action="Index" asp-controller="Course" asp-route-id="@enrollment.CourseId" class="course-card" style="text-decoration:none;color:inherit;">
+                    <div class="course-img-wrapper">
+                        @if (!string.IsNullOrEmpty(enrollment.Course.ImageUrl))
+                        {
+                            <img src="@enrollment.Course.ImageUrl" alt="@enrollment.Course.Name" class="course-image" />
+                        }
+                        else
+                        {
+                            <span>@enrollment.Course.Name.Substring(0, Math.Min(2, enrollment.Course.Name.Length)).ToUpper()</span>
+                        }
+                    </div>
+                    <div class="course-details">
+                        <div class="course-title">@enrollment.Course.Name</div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-labels">
+                                <span>Progress</span>
+                                <span>@enrollment.Progress%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: @enrollment.Progress%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <div class="spec-count">@totalLessons</div>
+                                <div class="spec-label">Lessons</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-count">@totalMaterials</div>
+                                <div class="spec-label">Materials</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-count">@totalExams</div>
+                                <div class="spec-label">Exams</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-card" style="margin-bottom: 40px;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📚</div>
+            <h3>No active enrollments</h3>
+            <p style="margin-top: 4px; margin-bottom: 16px;">Enroll in courses to start practicing skills and progressing on your roadmap.</p>
+            <a asp-action="Index" asp-controller="CourseSales" class="btn-action btn-action-primary">Browse Course Catalog</a>
+        </div>
+    }
+}
+else
+{
+    <!-- ── INSTRUCTOR VIEW ──────────────────────────────────────── -->
+    
+    <!-- Section 1: Instructor Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div>
+                <div class="stat-num">@Model.CreatedCourses.Count</div>
+                <div class="stat-label">Uploaded Courses</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📖</div>
+            <div>
+                <div class="stat-num">@Model.TotalLessonsCount</div>
+                <div class="stat-label">Total Lessons</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+                <div class="stat-num">@Model.TotalStudentsCount</div>
+                <div class="stat-label">Enrolled Students</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div>
+                <div class="stat-num">4.8</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Uploaded Courses -->
+    <h2 class="section-title">
+        Manage Uploaded Courses
+        <span>(@Model.CreatedCourses.Count total)</span>
+    </h2>
+
+    @if (Model.CreatedCourses.Any())
+    {
+        <div class="course-grid">
+            @foreach (var course in Model.CreatedCourses)
+            {
+                var studentsEnrolled = course.Enrollments?.Count ?? 0;
+                var lessonsCount = course.Lessons.Count;
+                
+                <div class="course-card">
+                    <div class="course-img-wrapper">
+                        @if (!string.IsNullOrEmpty(course.ImageUrl))
+                        {
+                            <img src="@course.ImageUrl" alt="@course.Name" class="course-image" />
+                        }
+                        else
+                        {
+                            <span>@course.Name.Substring(0, Math.Min(2, course.Name.Length)).ToUpper()</span>
+                        }
+                    </div>
+                    <div class="course-details">
+                        <div class="course-title" style="margin-bottom: 24px;">@course.Name</div>
+                        
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <div class="spec-count">@studentsEnrolled</div>
+                                <div class="spec-label">Students</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-count">@lessonsCount</div>
+                                <div class="spec-label">Lessons</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-count">$@course.Price</div>
+                                <div class="spec-label">Price</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-card" style="margin-bottom: 40px;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📁</div>
+            <h3>No courses uploaded</h3>
+            <p style="margin-top: 4px; margin-bottom: 16px;">Publish courses to share your knowledge with students globally.</p>
+            <a href="#" class="btn-action btn-action-primary">Create New Course</a>
+        </div>
+    }
+}
+
+@if (Model.Role.Equals("Instructor", StringComparison.OrdinalIgnoreCase) && Model.ManagedCommunities.Any())
+{
+    <!-- Section 3: Instructor Community Management -->
+    <div style="margin-bottom: 32px;">
+        <h2 class="section-title" style="margin-bottom: 20px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            My Communities
+            <span>(@Model.ManagedCommunities.Count total)</span>
+        </h2>
+
+        @foreach (var community in Model.ManagedCommunities)
+        {
+            var orderedPosts = community.Posts.OrderByDescending(p => p.CreatedAt).ToList();
+            var communityTotalComments = community.Posts.Sum(p => p.Comments.Count);
+            var communityReportedPostCount = community.Posts.Count(p => p.ReportsCount > 0);
+
+            <div class="community-section" style="margin-bottom: 24px;">
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    @community.Name
+                </h3>
+
+                <!-- Stats row -->
+                <div class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(0, 97, 145, 0.08);">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-num">@community.Posts.Count</div>
+                            <div class="stat-label">Total Posts</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(0, 97, 145, 0.08);">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-num">@communityTotalComments</div>
+                            <div class="stat-label">Total Comments</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(220, 38, 38, 0.08); color: #dc2626;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-num">@communityReportedPostCount</div>
+                            <div class="stat-label">Reported Posts</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08); color: #10b981;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-num">@community.Posts.Count(p => p.Status == PostStatus.Approved)</div>
+                            <div class="stat-label">Approved Posts</div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (orderedPosts.Any())
+                {
+                    <div style="border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <thead>
+                                <tr style="background: var(--bg); text-align: left;">
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Author</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Content</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Date</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Status</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Comments</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Reports</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var post in orderedPosts)
+                                {
+                                    var authorName = $"{post.Author.FirstName} {post.Author.LastName}";
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 14px 16px; vertical-align: top;">
+                                            <div style="font-weight: 600; color: var(--secondary);">@authorName</div>
+                                            <div style="font-size: 12px; color: var(--text-muted);">@@@post.Author.UserName</div>
+                                        </td>
+                                        <td style="padding: 14px 16px; vertical-align: top; max-width: 300px;">
+                                            <div class="post-preview-text">@(post.Content.Length > 120 ? post.Content.Substring(0, 120) + "..." : post.Content)</div>
+                                            @if (post.Content.Length > 120)
+                                            {
+                                                <button type="button" class="view-post-btn" onclick="togglePostContent('@post.Id')" style="background: none; border: none; color: var(--primary); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0; margin-top: 4px;">View full content</button>
+                                                <div id="post-full-@post.Id" class="post-full-content" style="display: none; margin-top: 8px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); font-size: 13px; line-height: 1.6; white-space: pre-wrap;">@post.Content</div>
+                                            }
+                                        </td>
+                                        <td style="padding: 14px 16px; vertical-align: top; white-space: nowrap; color: var(--text-muted); font-size: 13px;">@post.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        <td style="padding: 14px 16px; vertical-align: top;">
+                                            @switch (post.Status)
+                                            {
+                                                case PostStatus.Approved:
+                                                    <span style="display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; background: rgba(16, 185, 129, 0.1); color: #10b981;">Approved</span>
+                                                    break;
+                                                case PostStatus.PendingReview:
+                                                    <span style="display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Pending</span>
+                                                    break;
+                                                case PostStatus.Rejected:
+                                                    <span style="display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; background: rgba(220, 38, 38, 0.1); color: #dc2626;">Rejected</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td style="padding: 14px 16px; vertical-align: top; text-align: center; color: var(--text-muted);">@post.Comments.Count</td>
+                                        <td style="padding: 14px 16px; vertical-align: top; text-align: center;">
+                                            @if (post.ReportsCount > 0)
+                                            {
+                                                <span style="color: #dc2626; font-weight: 600;">@post.ReportsCount</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: var(--text-muted);">0</span>
+                                            }
+                                        </td>
+                                        <td style="padding: 14px 16px; vertical-align: top; white-space: nowrap;">
+                                            @if (post.Status != PostStatus.Approved)
+                                            {
+                                                <form asp-action="ApprovePost" asp-controller="Main" method="post" style="display: inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="postId" value="@post.Id" />
+                                                    <button type="submit" style="background: none; border: 1px solid #bbf7d0; color: #16a34a; padding: 4px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); margin-right: 4px;">Approve</button>
+                                                </form>
+                                            }
+                                            @if (post.Status != PostStatus.Rejected)
+                                            {
+                                                <form asp-action="RejectPost" asp-controller="Main" method="post" style="display: inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="postId" value="@post.Id" />
+                                                    <button type="submit" style="background: none; border: 1px solid #fecaca; color: #dc2626; padding: 4px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); margin-right: 4px;">Reject</button>
+                                                </form>
+                                            }
+                                            <form asp-action="DeletePost" asp-controller="Main" method="post" style="display: inline;" onsubmit="return confirm('Delete this post permanently?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="postId" value="@post.Id" />
+                                                <button type="submit" style="background: none; border: 1px solid #e5e7eb; color: #6b7280; padding: 4px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition);">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 32px; color: var(--text-muted); border: 1.5px dashed var(--border); border-radius: var(--radius-md);">
+                        <h3 style="font-size: 15px; color: var(--secondary); margin-bottom: 4px;">No posts yet</h3>
+                        <p style="font-size: 13px;">This community has no posts. Encourage members to start posting!</p>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+<!-- Section 4: Community Activities -->
+<div class="community-section">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 class="section-title" style="margin-bottom: 0;">Community Activities</h2>
+        <a href="/Home#community" style="color: var(--primary); font-size:14px; font-weight:600; display:flex; align-items:center; gap:4px;">
+            Visit Community
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+            </svg>
+        </a>
+    </div>
+
+    @if (Model.RecentPosts.Any())
+    {
+        <div class="community-posts">
+            @foreach (var post in Model.RecentPosts)
+            {
+                var authorName = $"{post.Author.FirstName} {post.Author.LastName}";
+                var authorInitial = post.Author.FirstName.Substring(0, 1).ToUpper();
+                
+                <div class="post-card">
+                    <div class="post-header">
+                        @if (!string.IsNullOrEmpty(post.Author.ProfilePictureUrl))
+                        {
+                            <img src="@post.Author.ProfilePictureUrl" alt="@authorName" class="author-avatar" />
+                        }
+                        else
+                        {
+                            <div class="author-avatar">@authorInitial</div>
+                        }
+                        <div class="post-meta">
+                            <div class="post-author-name">@authorName</div>
+                            <div style="font-size:11px; margin-top:2px;">
+                                Posted in <strong>@post.Community.Name</strong> • @post.CreatedAt.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        @post.Content
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size:14px;">
+            No recent community posts found. Be the first to start a conversation!
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    function togglePostContent(postId) {
+        var full = document.getElementById('post-full-' + postId);
+        var btn = full.previousElementSibling;
+        if (full.style.display === 'none') {
+            full.style.display = 'block';
+            btn.textContent = 'Show less';
+        } else {
+            full.style.display = 'none';
+            btn.textContent = 'View full content';
+        }
+    }
+</script>
+}

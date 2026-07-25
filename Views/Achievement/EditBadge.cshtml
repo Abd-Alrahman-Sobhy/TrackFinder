@@ -1,0 +1,57 @@
+﻿@model TrackFinder.Models.AchievementModels.Badges
+@{
+    ViewData["Title"] = "Edit Badge";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><a asp-action="Badges">Badges</a><span>›</span><span>Edit</span></div>
+        <h1 class="page-title">Edit Badge</h1>
+        <p class="page-sub">Update details for this digital insignia.</p>
+    </div>
+</div>
+
+<div class="card" style="max-width:600px;">
+    <form asp-action="EditBadge" method="post">
+        <input asp-for="BadgeId" type="hidden" />
+
+        <div class="form-grid">
+            <div class="form-group full">
+                <label asp-for="BadgeName">Badge Name <span class="req">*</span></label>
+                <input asp-for="BadgeName" class="form-control" />
+                <span asp-validation-for="BadgeName" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="BadgeDescription">Description</label>
+                <input asp-for="BadgeDescription" class="form-control" />
+                <span asp-validation-for="BadgeDescription" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Level">Level</label>
+                <input asp-for="Level" type="number" class="form-control" />
+                <span asp-validation-for="Level" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UnlockCondition">Unlock Condition</label>
+                <input asp-for="UnlockCondition" class="form-control" />
+                <span asp-validation-for="UnlockCondition" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="BadgeIconClass">Icon Class</label>
+                <input asp-for="BadgeIconClass" class="form-control" />
+                <div class="form-hint">Use Bootstrap Icons class names, e.g. <code>bi bi-patch-check</code></div>
+                <span asp-validation-for="BadgeIconClass" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Badges" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>

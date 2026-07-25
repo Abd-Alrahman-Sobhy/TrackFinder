@@ -1,0 +1,263 @@
+@model TrackFinder.ViewModels.Courses.CourseDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                @Model.Name
+            </h2>
+
+            <p class="text-muted mb-0">
+                Course Details
+            </p>
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a asp-controller="Courses"
+               asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+
+                <i class="bi bi-pencil-square"></i>
+                Edit
+            </a>
+
+
+            <a asp-controller="Courses"
+               asp-action="Delete"
+               asp-route-id="@Model.Id"
+               class="btn btn-danger">
+
+                <i class="bi bi-trash"></i>
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row g-4">
+
+
+        <!-- Image Card -->
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body text-center">
+
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl"
+                             class="img-fluid rounded mb-3"
+                             style="max-height:280px; object-fit:cover;"
+                             alt="Course Image" />
+                    }
+                    else
+                    {
+                        <div class="bg-light rounded p-5 text-muted">
+
+                            <i class="bi bi-image fs-1"></i>
+
+                            <p class="mt-2 mb-0">
+                                No Image Available
+                            </p>
+
+                        </div>
+                    }
+
+
+                    <h4 class="fw-bold mt-3">
+                        @Model.Name
+                    </h4>
+
+
+                    <span class="badge bg-primary">
+                        @Model.Level
+                    </span>
+
+                    <span class="badge bg-success">
+                        @Model.Language
+                    </span>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- Details Card -->
+        <div class="col-lg-8">
+
+
+            <div class="card shadow-sm border-0">
+
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        Course Information
+                    </h5>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <div class="row">
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Price
+                            </small>
+
+                            <h5>
+                                @Model.Price.ToString("C")
+                            </h5>
+
+                        </div>
+
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Rating
+                            </small>
+
+                            <h5>
+
+                                <i class="bi bi-star-fill text-warning"></i>
+
+                                @Model.Rating
+
+                            </h5>
+
+                        </div>
+
+
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Instructor
+                            </small>
+
+                            <h6>
+                                @Model.InstructorName
+                            </h6>
+
+                        </div>
+
+
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Track Stack
+                            </small>
+
+                            <h6>
+                                @Model.TrackStackName
+                            </h6>
+
+                        </div>
+
+
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Duration
+                            </small>
+
+                            <h6>
+                                @Model.DurationValue @Model.DurationIn
+                            </h6>
+
+                        </div>
+
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                Discount
+                            </small>
+
+                            <h6>
+                                @(Model.Discount.HasValue
+                                                                ? Model.Discount.Value.ToString("P")
+                                                                : "No Discount")
+                            </h6>
+
+                        </div>
+
+
+
+                    </div>
+
+
+                    <hr />
+
+
+                    <div>
+
+                        <small class="text-muted">
+                            Description
+                        </small>
+
+
+                        <p class="mt-2">
+                            @(string.IsNullOrWhiteSpace(Model.Description)
+                                                        ? "No description available."
+                                                        : Model.Description)
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

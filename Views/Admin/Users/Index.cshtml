@@ -1,0 +1,38 @@
+@model IEnumerable<TrackFinder.ViewModels.Users.UserListViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Users</h3>
+    <a class="btn btn-primary" asp-controller="Users" asp-action="Create">New User</a>
+</div>
+
+<table class="table table-hover bg-white shadow-sm rounded">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model ?? Enumerable.Empty < TrackFinder.ViewModels.Users.UserListViewModel > ())
+        {
+            <tr>
+                <td>@item.Username</td>
+                <td>@item.FirstName @item.LastName</td>
+                <td>@item.Email</td>
+                <td>@item.Role</td>
+                <td>@item.CreatedAt.ToString("g")</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary me-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-sm btn-outline-secondary me-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,20 @@
+@model TrackFinder.Models.CourseModels.Material
+@{
+    ViewData["Title"] = "Material Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card" style="max-width:560px;">
+    <div class="card-title">Material Details</div>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+        <div><strong style="color:var(--secondary);">File Name:</strong> <span style="color:var(--text-muted)">@Model.FileName</span></div>
+        <div><strong style="color:var(--secondary);">Content Type:</strong> <span style="color:var(--text-muted)">@Model.ContentType</span></div>
+        <div><strong style="color:var(--secondary);">File URL:</strong> <span style="color:var(--text-muted);word-break:break-all;">@Model.FileUrl</span></div>
+        <div><strong style="color:var(--secondary);">Associated Lesson:</strong> <span style="color:var(--text-muted)">@Model.LessonId</span></div>
+    </div>
+
+    <div class="form-actions">
+        <a asp-controller="Material" asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
+        <a asp-controller="Lesson" asp-action="Details" asp-route-id="@Model.LessonId" class="btn btn-ghost">Back to Lesson</a>
+    </div>
+</div>

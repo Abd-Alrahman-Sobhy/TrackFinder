@@ -1,0 +1,244 @@
+@using TrackFinder.Models.CourseModels
+@model TrackFinder.Models.CourseModels.Course
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var discountedPrice = Model.Discount.HasValue && Model.Discount > 0
+        ? Model.Price * (1 - (decimal)(Model.Discount.Value / 100))
+        : Model.Price;
+
+    var levelBadge = Model.Level switch
+    {
+        Level.Beginner => "badge-green",
+        Level.Intermediate => "badge-amber",
+        Level.Advanced => "badge-red",
+        _ => "badge-slate"
+    };
+
+    int fullStars = (int)Math.Round(Model.Rating);
+    string starStr = new string('★', fullStars) + new string('☆', 5 - fullStars);
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb">
+            <a asp-controller="CourseCreation" asp-action="Index">Courses</a>
+            <span>›</span><span>Details</span>
+        </div>
+        <h1 class="page-title">@Model.Name</h1>
+        <p class="page-sub">Course overview and lesson management.</p>
+    </div>
+    <div class="action-row">
+        <a asp-controller="CourseCreation" asp-action="Index" class="btn btn-ghost btn-sm">← Courses</a>
+        <a asp-controller="CourseCreation" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-sm">Edit Course</a>
+        <a asp-controller="Lesson" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">+ Add Lesson</a>
+        <a asp-controller="CourseCreation" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm"
+           onclick="return confirm('Delete \'@Model.Name\' and all its lessons?')">Delete</a>
+    </div>
+</div>
+
+<!-- Details Grid -->
+<div class="details-grid">
+    <!-- Sidebar -->
+    <div>
+        <div class="card" style="padding:0;overflow:hidden;">
+            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="course-image" />
+            }
+            else
+            {
+                <div class="no-image">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2" />
+                        <path d="m8 21 4-4 4 4M12 17v4" />
+                    </svg>
+                    <span>No Thumbnail</span>
+                </div>
+            }
+            <div class="meta-list">
+                <div class="meta-item">
+                    <span class="meta-label">Level</span>
+                    <span class="badge @levelBadge">@Model.Level</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Language</span>
+                    <span class="badge badge-sky">@Model.Language</span>
+                </div>
+                @if (Model.Duration != null)
+                {
+                    <div class="meta-item">
+                        <span class="meta-label">Duration</span>
+                        <span class="meta-value">@Model.Duration.Value @Model.Duration.DurationIn</span>
+                    </div>
+                }
+                <div class="meta-item">
+                    <span class="meta-label">Lessons</span>
+                    <span class="badge badge-purple">@(Model.Lessons?.Count ?? 0)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Skills</span>
+                    <span class="badge badge-purple">@(Model.CourseSkills?.Count ?? 0)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div>
+        <!-- Pricing -->
+        <div class="card card-padded" style="margin-bottom:20px;">
+            <div class="card-title">Pricing</div>
+            <div class="price-row">
+                @if (Model.Discount.HasValue && Model.Discount > 0)
+                {
+                    <span class="price-final">$@discountedPrice.ToString("N2")</span>
+                    <span class="price-strike">$@Model.Price.ToString("N2")</span>
+                    <span class="badge badge-amber">@Model.Discount% off</span>
+                }
+                else
+                {
+                    <span class="price-original">$@Model.Price.ToString("N2")</span>
+                    <span style="color:var(--text-muted);font-size:14px;">No discount</span>
+                }
+            </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="card card-padded" style="margin-bottom:20px;">
+            <div class="card-title">Rating</div>
+            <div class="rating-row">
+                <span class="rating-num">@Model.Rating.ToString("F1")</span>
+                <div>
+                    <div class="stars">@starStr</div>
+                    <div style="font-size:12px;color:var(--text-muted);">Out of 5.0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="card card-padded" style="margin-bottom:20px;">
+            <div class="card-title">Description</div>
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p style="line-height:1.85;color:var(--text-dim);margin-top:10px;">@Model.Description</p>
+            }
+            else
+            {
+                <p style="color:var(--text-muted);font-style:italic;margin-top:10px;">No description provided.</p>
+            }
+        </div>
+
+        <!-- Skills Gained -->
+        <div class="card card-padded">
+            <div class="card-title">Skills Gained</div>
+            @if (Model.CourseSkills == null || !Model.CourseSkills.Any())
+            {
+                <p style="color:var(--text-muted);font-style:italic;margin-top:10px;">No skills assigned to this course yet.</p>
+            }
+            else
+            {
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                    @foreach (var courseSkill in Model.CourseSkills)
+                    {
+                        <span class="badge badge-sky" title="@courseSkill.GainedSkill?.Description">
+                            @courseSkill.GainedSkill?.Name
+                        </span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Lessons Section -->
+<div class="section-card">
+    <div class="section-header">
+        <div>
+            <h2>Lessons</h2>
+            <div class="section-count">@(Model.Lessons?.Count ?? 0) lesson(s) in this course</div>
+        </div>
+        <a asp-controller="Lesson" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">+ Add Lesson</a>
+    </div>
+
+    @if (Model.Lessons == null || !Model.Lessons.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <h3>No lessons yet</h3>
+            <p>Add your first lesson to get started.</p>
+            <a asp-controller="Lesson" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary">Create First Lesson</a>
+        </div>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Lesson</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                }
+                @foreach (var lesson in Model.Lessons)
+                {
+                    <tr>
+                        <td><div class="lesson-num">@i</div></td>
+                        <td>
+                            <div class="lesson-cell">
+                                <div>
+                                    <div class="lesson-name">@lesson.Name</div>
+                                    @if (!string.IsNullOrWhiteSpace(lesson.Description))
+                                    {
+                                        <div class="lesson-desc">@lesson.Description</div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (lesson.Duration != null)
+                            {
+                                <span class="duration-pill">@lesson.Duration.Minutes<small>m</small> @lesson.Duration.Seconds<small>s</small></span>
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--text-muted)">—</span>
+                            }
+                        </td>
+                        <td style="font-weight:600;">$@lesson.Price.ToString("N2")</td>
+                        <td>
+                            @if (lesson.Discount.HasValue && lesson.Discount > 0)
+                            {
+                                <span class="badge badge-amber">@lesson.Discount%</span>
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--text-muted);font-size:13px;">—</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="action-row">
+                                <a asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id" class="btn btn-info btn-sm">View</a>
+                                <a asp-controller="Lesson" asp-action="Edit" asp-route-id="@lesson.Id" class="btn btn-success btn-sm">Edit</a>
+                                <a asp-controller="Lesson" asp-action="Delete" asp-route-id="@lesson.Id" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Delete this lesson?')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    }
+</div>

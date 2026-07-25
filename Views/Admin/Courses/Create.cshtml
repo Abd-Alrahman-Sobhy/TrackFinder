@@ -1,0 +1,94 @@
+@model TrackFinder.ViewModels.Courses.CreateCourseViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>New Course</h3>
+<form asp-action="Create" asp-controller="Courses" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Image" class="form-label">Course Image</label>
+                <input asp-for="Image" type="file" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label asp-for="Language" class="form-label"></label>
+                <select asp-for="Language" class="form-select" asp-items="@(Html.GetEnumSelectList<TrackFinder.Models.CourseModels.Language>())"></select>
+                <span asp-validation-for="Language" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Level" class="form-label"></label>
+                <select asp-for="Level" class="form-select" asp-items="@(Html.GetEnumSelectList<TrackFinder.Models.CourseModels.Level>())"></select>
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Rating" class="form-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Discount" class="form-label"></label>
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DurationValue" class="form-label">Duration Value</label>
+                <input asp-for="DurationValue" class="form-control" />
+                <span asp-validation-for="DurationValue" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DurationIn" class="form-label">Duration In</label>
+                <select asp-for="DurationIn" class="form-select" asp-items="@(Html.GetEnumSelectList<TrackFinder.Models.CourseModels.DurationIn>())"></select>
+                <span asp-validation-for="DurationIn" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="InstructorId" class="form-label">Instructor</label>
+                <select asp-for="InstructorId" class="form-select" asp-items="ViewBag.Instructors"></select>
+                <span asp-validation-for="InstructorId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TrackStackId" class="form-label">Track Stack</label>
+                <select asp-for="TrackStackId" class="form-select" asp-items="ViewBag.TrackStacks"></select>
+                <span asp-validation-for="TrackStackId" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Create</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Courses">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

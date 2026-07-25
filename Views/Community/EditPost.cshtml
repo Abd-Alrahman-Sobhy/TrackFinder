@@ -1,0 +1,42 @@
+@model TrackFinder.ViewModels.Community_ViewModels.PostFormVM
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Edit Post";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var communities = ViewBag.Communities as IReadOnlyList<SelectListItem> ?? Array.Empty<SelectListItem>();
+}
+
+<div class="edit-post-page">
+    <div class="edit-post-card">
+        <h1>Edit Post</h1>
+        <form asp-action="EditPost" asp-route-id="@Model.Id" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <label asp-for="GroupId">Community</label>
+            <select asp-for="GroupId" asp-items="communities"></select>
+            <span asp-validation-for="GroupId" class="field-validation-error"></span>
+
+            <label asp-for="Content">Post</label>
+            <textarea asp-for="Content"></textarea>
+            <span asp-validation-for="Content" class="field-validation-error"></span>
+
+            <label asp-for="ImageUrl">Image URL</label>
+            <input asp-for="ImageUrl" />
+            <span asp-validation-for="ImageUrl" class="field-validation-error"></span>
+
+            <label asp-for="PostPriority">Priority</label>
+            <input asp-for="PostPriority" type="number" min="0" />
+
+            <div class="edit-actions">
+                <a asp-action="Index">Cancel</a>
+                <button type="submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

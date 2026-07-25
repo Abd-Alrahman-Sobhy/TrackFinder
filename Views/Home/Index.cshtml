@@ -1,0 +1,2618 @@
+@{
+    ViewData["Title"] = "Track Finder — Master your career with guided roads";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>@ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Geist:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Orbitron:wght@400..900&family=Pixelify+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow-y: auto;
+            height: auto;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .fade-section {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        :root {
+            --sky-light: #eaf4fc;
+            --water-deep: #0b2b44;
+            --stone: #f5f9ff;
+            --pine: #1e4b6b;
+            --sand: #f0f5fa;
+            --accent: #2b7a9c;
+            --accent-soft: #d4e7f5;
+            --text-main: #1e2f40;
+            --text-soft: #475569;
+            --border-light: #dee9f2;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-sm: 0 1px 3px rgba(11, 43, 68, 0.04);
+            --shadow-md: 0 8px 28px rgba(11, 43, 68, 0.06);
+            --shadow-lg: 0 20px 50px rgba(11, 43, 68, 0.1);
+            --shadow-xl: 0 32px 64px rgba(11, 43, 68, 0.14);
+            --radius-sm: 14px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 36px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-light);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            color: #0b2b44;
+            text-decoration: none;
+            background: linear-gradient(135deg, #0b2b44 0%, #2b7a9c 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #1e3b4f;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a:hover {
+            border-bottom-color: #2b7a9c;
+            color: #0b2b44;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #0b2b44;
+            color: white;
+            box-shadow: 0 6px 18px rgba(11, 43, 68, 0.22);
+        }
+
+        .btn-primary:hover {
+            background: #123a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(11, 43, 68, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #2b7a9c;
+            color: #0b2b44;
+        }
+
+        .btn-outline:hover {
+            background: #e6f0f8;
+            border-color: #0b2b44;
+        }
+
+        .btn-link {
+            color: #1e3b4f;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-white {
+            background: white;
+            color: #0b2b44;
+            font-weight: 600;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+        }
+
+        .btn-white:hover {
+            background: #e6f0f8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-dark {
+            background: #0b2b44;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 22px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+        }
+
+        .btn-dark:hover {
+            background: #1e4b6b;
+            transform: translateY(-2px);
+        }
+
+        .btn-large {
+            padding: 15px 34px;
+            font-size: 1.05rem;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(175deg, #d9ecfe 0%, #ffffff 70%);
+            padding: 80px 0 90px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle at 30% 30%, rgba(43, 122, 156, 0.13) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge {
+            background: rgba(11, 43, 68, 0.07);
+            backdrop-filter: blur(4px);
+            color: #0b2b44;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 18px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 18px;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(11, 43, 68, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 700;
+            line-height: 1.12;
+            color: #0b2b44;
+            margin-bottom: 20px;
+            letter-spacing: -0.6px;
+        }
+
+        .hero h1 span {
+            color: #1e6b8f;
+            background: linear-gradient(to right, #1e4b6b, #2b7a9c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #334e68;
+            margin-bottom: 30px;
+            max-width: 480px;
+            line-height: 1.55;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .cube-ambient-glow {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(43, 122, 156, 0.22) 0%, transparent 70%);
+            filter: blur(24px);
+            pointer-events: none;
+            z-index: 1;
+            animation: pulseAmbient 4s ease-in-out infinite alternate;
+        }
+
+        @@keyframes pulseAmbient {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1.12);
+                opacity: 1;
+            }
+        }
+
+        .cube-scaler {
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            z-index: 2;
+            animation: floatCube 6s ease-in-out infinite alternate;
+        }
+
+        @@keyframes floatCube {
+            0% {
+                transform: translateY(18px);
+            }
+            100% {
+                transform: translateY(-18px);
+            }
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg) rotateY(40deg);
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(0, 210, 255, 0.75);
+            background-color: #061523;
+            background-image: linear-gradient(rgba(0, 210, 255, 0.35) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.35) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+
+        .cube-face.front {
+            background-color: #0a2540;
+            box-shadow: inset 0 0 40px rgba(0, 210, 255, 0.3), 0 0 20px rgba(0, 210, 255, 0.45);
+        }
+        .cube-face.top {
+            background-color: #1a4a7a;
+            box-shadow: inset 0 0 50px rgba(120, 220, 255, 0.45);
+            background-image: linear-gradient(rgba(100, 230, 255, 0.55) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100, 230, 255, 0.55) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+        .cube-face.right {
+            background-color: #061a30;
+            box-shadow: inset 0 0 30px rgba(0, 180, 230, 0.2);
+        }
+        .cube-face.left {
+            background-color: #040f1c;
+            box-shadow: inset 0 0 20px rgba(0, 160, 210, 0.15);
+        }
+        .cube-face.back {
+            background-color: #040e1a;
+            box-shadow: inset 0 0 15px rgba(0, 150, 200, 0.1);
+        }
+        .cube-face.bottom {
+            background-color: #030b14;
+            box-shadow: inset 0 0 15px rgba(0, 140, 190, 0.1);
+        }
+
+        .cube-face::before,
+        .cube-face::after {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: #00d2ff;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #00d2ff, 0 0 24px rgba(0, 210, 255, 0.8);
+            animation: pulseNode 2s infinite ease-in-out;
+        }
+
+        .cube-face::before {
+            top: 8px;
+            left: 8px;
+        }
+        .cube-face::after {
+            bottom: 8px;
+            right: 8px;
+            animation-delay: 1s;
+        }
+
+        @@keyframes pulseNode {
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+        }
+
+        .cube-face.front {
+            transform: rotateY(0deg) translateZ(100px);
+        }
+        .cube-face.back {
+            transform: rotateY(180deg) translateZ(100px);
+        }
+        .cube-face.left {
+            transform: rotateY(-90deg) translateZ(100px);
+        }
+        .cube-face.right {
+            transform: rotateY(90deg) translateZ(100px);
+        }
+        .cube-face.top {
+            transform: rotateX(90deg) translateZ(100px);
+        }
+        .cube-face.bottom {
+            transform: rotateX(-90deg) translateZ(100px);
+        }
+
+        .cube-core {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d2ff, #0066aa);
+            box-shadow: 0 0 60px rgba(0, 210, 255, 1), 0 0 120px rgba(0, 210, 255, 0.5);
+            top: 75px;
+            left: 75px;
+            border-radius: 6px;
+            transform-style: preserve-3d;
+            animation: spinCore 4s linear infinite;
+        }
+
+        @@keyframes spinCore {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+        /* ── Section Spacing ── */
+        .section {
+            padding: 100px 0;
+        }
+        .section-alt {
+            background: #f6faff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .section-title h2 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #0b2b44;
+            letter-spacing: -0.4px;
+        }
+        .section-title .subtitle {
+            color: #475569;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        .underline {
+            width: 64px;
+            height: 4px;
+            background: linear-gradient(to right, #1e4b6b, #5fa3c9);
+            margin: 16px auto 0;
+            border-radius: 4px;
+        }
+
+        /* ── Cards ── */
+        .cards-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #e3edf6;
+            border-radius: var(--radius-lg);
+            padding: 30px 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: #b8d6f0;
+        }
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            background: #d4e7f5;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #0b2b44;
+            transition: all 0.3s;
+        }
+        .card:hover .card-icon {
+            background: #0b2b44;
+            color: #fff;
+            transform: scale(1.05);
+        }
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 650;
+            margin-bottom: 10px;
+            color: #0b2b44;
+        }
+        .card p {
+            color: #475569;
+            font-size: 0.93rem;
+            line-height: 1.55;
+        }
+
+        .split-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+        .split-card {
+            border-radius: var(--radius-xl);
+            padding: 42px 36px;
+            transition: all 0.3s;
+        }
+        .split-card.dark {
+            background: #0b2b44;
+            color: white;
+        }
+        .split-card.light {
+            background: #deecf7;
+            color: #0b2b44;
+        }
+        .split-card h3 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .split-card ul {
+            list-style: none;
+            margin: 24px 0;
+            padding: 0;
+        }
+        .split-card li {
+            padding: 9px 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── Track Slider ── */
+        .tracks-showcase {
+            position: relative;
+            overflow: hidden;
+        }
+        .track-slide {
+            display: none;
+            border-radius: var(--radius-xl);
+            padding: 64px 44px;
+            min-height: 440px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            color: white;
+            transition: opacity 0.6s ease;
+        }
+        .track-slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .track-slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(11, 27, 44, 0.85) 0%, rgba(11, 27, 44, 0.2) 60%, rgba(11, 27, 44, 0.05) 100%);
+            border-radius: var(--radius-xl);
+            z-index: 1;
+        }
+        .track-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+        .track-content h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .track-content .languages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .language-tag {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .track-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        .track-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .track-dot {
+            width: 44px;
+            height: 6px;
+            border-radius: 6px;
+            background: #cbd5e1;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .track-dot.active-dot {
+            background: #0b2b44;
+            width: 60px;
+        }
+        .track-label {
+            text-align: center;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+            margin-top: 6px;
+        }
+
+        .photo-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .photo-card {
+            border-radius: 24px;
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(11, 43, 68, 0.75), transparent);
+            color: white;
+            padding: 20px 18px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: center;
+        }
+        .step-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 32px 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e3edf6;
+            transition: all 0.3s;
+        }
+        .step-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .step-number {
+            background: #d4e7f5;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #0b2b44;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: center;
+        }
+        .stat-item h3 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #0b2b44;
+        }
+        .stat-item p {
+            color: #475569;
+            font-size: 1rem;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .testimonial-card {
+            background: white;
+            border-radius: 24px;
+            padding: 26px;
+            border: 1px solid #e3edf6;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+        .testimonial-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 16px;
+            color: #334e68;
+        }
+        .testimonial-author {
+            font-weight: 700;
+            color: #0b2b44;
+        }
+
+        .cta-banner {
+            background: linear-gradient(135deg, #0b2b44 0%, #1e4b6b 100%);
+            border-radius: var(--radius-xl);
+            padding: 60px 48px;
+            text-align: center;
+            color: white;
+            margin: 0 20px;
+            box-shadow: var(--shadow-xl);
+        }
+        .cta-banner h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            letter-spacing: -0.4px;
+        }
+
+        /* ── Monitor Showcase ── */
+        .monitor-section {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #0f2d4a 0%, #030b12 100%);
+            color: #ffffff;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+            perspective: 2000px;
+        }
+        .monitor-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 55%;
+            background: radial-gradient(circle, rgba(91, 180, 232, 0.16) 0%, transparent 70%);
+            filter: blur(70px);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 0 28px;
+            position: relative;
+            z-index: 5;
+        }
+        .showcase-header h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .showcase-header p {
+            font-size: 1.2rem;
+            color: #94b3cc;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .showcase-badge {
+            background: rgba(91, 180, 232, 0.14);
+            border: 1px solid rgba(91, 180, 232, 0.3);
+            color: #5bb4e8;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .monitor-mockup {
+            width: 92%;
+            max-width: 1060px;
+            position: relative;
+            z-index: 5;
+            transform: perspective(1200px) rotateX(40deg) rotateZ(0deg) rotateY(0deg);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(-30px 40px 50px rgba(0, 0, 0, 0.8));
+        }
+        .monitor-mockup:hover {
+            transform: perspective(1200px) rotateX(0deg);
+            filter: drop-shadow(-20px 30px 40px rgba(0, 0, 0, 0.65));
+        }
+
+        /* Monitor frame — ultra-thin bezels */
+        .monitor-frame {
+            position: relative;
+            background: linear-gradient(160deg, #1a1f2b 0%, #0d1117 50%, #060a0f 100%);
+            border: 3px solid #1a1f28;
+            border-radius: 14px 14px 0 0;
+            box-shadow:
+                inset 1px 1px 3px rgba(255, 255, 255, 0.04),
+                inset -1px -1px 3px rgba(0, 0, 0, 0.7),
+                6px 16px 40px rgba(0, 0, 0, 0.75),
+                -3px 3px 16px rgba(0, 100, 180, 0.12);
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Tiny webcam dot */
+        .monitor-frame::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: #1a2028;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .monitor-screen {
+            flex: 1;
+            background: #1a1e26;
+            color: #e2e8f0;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+        }
+        /* Glass reflection */
+        .monitor-screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg,
+                    rgba(255, 255, 255, 0.28) 0%,
+                    rgba(255, 255, 255, 0.04) 28%,
+                    transparent 30%,
+                    transparent 60%,
+                    rgba(255, 255, 255, 0.03) 70%,
+                    rgba(255, 255, 255, 0.12) 100%);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* IDE Sidebar */
+        .ide-sidebar {
+            width: 175px;
+            background: #151a22;
+            border-right: 1px solid #252a33;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .ide-sidebar-header {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 8px;
+            margin-bottom: 4px;
+        }
+        .ide-file {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: #a0b0c0;
+            font-size: 0.76rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .ide-file:hover {
+            background: #1e2630;
+            color: #d0dde8;
+        }
+        .ide-file.active {
+            background: #1e2d3d;
+            color: #5bb4e8;
+        }
+        .ide-file-icon {
+            width: 16px;
+            text-align: center;
+            font-size: 0.7rem;
+        }
+        .ide-file-icon.folder {
+            color: #e8b84b;
+        }
+        .ide-file-icon.file {
+            color: #5bb4e8;
+        }
+        .ide-file-icon.react {
+            color: #61dafb;
+        }
+
+        /* IDE Main */
+        .ide-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .ide-tabs {
+            display: flex;
+            background: #11161d;
+            border-bottom: 1px solid #252a33;
+            padding: 0 8px;
+            gap: 2px;
+        }
+        .ide-tab {
+            padding: 9px 16px;
+            font-size: 0.74rem;
+            color: #8899aa;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .ide-tab.active {
+            color: #d0dde8;
+            border-bottom-color: #5bb4e8;
+            background: #1a1e26;
+        }
+        .ide-tab:hover {
+            color: #c0ccd8;
+        }
+
+        .ide-editor {
+            flex: 1;
+            padding: 18px 20px;
+            overflow-y: auto;
+            background: #1a1e26;
+            line-height: 1.7;
+            position: relative;
+        }
+        .ide-editor .line {
+            display: flex;
+            gap: 16px;
+            font-size: 0.78rem;
+        }
+        .ide-editor .line-num {
+            color: #445566;
+            min-width: 28px;
+            text-align: right;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .ide-editor .line-code {
+            flex: 1;
+            white-space: pre-wrap;
+        }
+        .syn-keyword {
+            color: #c792ea;
+        }
+        .syn-string {
+            color: #c3e88d;
+        }
+        .syn-func {
+            color: #82aaff;
+        }
+        .syn-comment {
+            color: #546e7a;
+            font-style: italic;
+        }
+        .syn-const {
+            color: #f78c6c;
+        }
+        .syn-type {
+            color: #ffcb6b;
+        }
+        .syn-prop {
+            color: #80cbc4;
+        }
+        .syn-bracket {
+            color: #89ddff;
+        }
+        .cursor-blink {
+            display: inline-block;
+            width: 2px;
+            height: 15px;
+            background: #5bb4e8;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blinkCursor 1s step-end infinite;
+        }
+        @@keyframes blinkCursor {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Terminal */
+        .ide-terminal {
+            background: #0d1117;
+            border-top: 1px solid #252a33;
+            padding: 10px 16px;
+            font-size: 0.74rem;
+            color: #a0b0c0;
+            max-height: 100px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .ide-terminal .term-line {
+            display: flex;
+            gap: 8px;
+        }
+        .term-prompt {
+            color: #5bb4e8;
+            flex-shrink: 0;
+        }
+        .term-output {
+            color: #c3e88d;
+        }
+        .term-info {
+            color: #8899aa;
+        }
+
+        /* Mini stats panel */
+        .ide-stats-panel {
+            position: absolute;
+            bottom: 14px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 99;
+            pointer-events: none;
+        }
+        .ide-stat-mini {
+            background: rgba(20, 28, 38, 0.9);
+            border: 1px solid #252a33;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.65rem;
+            color: #a0b0c0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+        .ide-stat-mini .stat-val {
+            color: #5bb4e8;
+            font-weight: 700;
+            font-size: 0.78rem;
+        }
+        .ide-stat-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .ide-stat-dot.green {
+            background: #4caf84;
+            box-shadow: 0 0 6px #4caf84;
+        }
+        .ide-stat-dot.blue {
+            background: #5bb4e8;
+            box-shadow: 0 0 6px #5bb4e8;
+        }
+
+        /* Monitor Stand */
+        .monitor-stand-neck {
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(180deg, #3a4452 0%, #252d38 50%, #1a2028 100%);
+            margin: 0 auto;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+        .monitor-stand-base {
+            width: 180px;
+            height: 14px;
+            background: linear-gradient(180deg, #2d3540 0%, #1a2028 60%, #11161d 100%);
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+        .monitor-shadow {
+            width: 55%;
+            height: 18px;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 50%;
+            filter: blur(16px);
+            margin: 16px auto 0;
+            pointer-events: none;
+        }
+
+        /* ── Platform Features Section ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 32px 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.5s;
+            pointer-events: none;
+        }
+        .feature-card:hover::before {
+            opacity: 0.12;
+            transform: scale(2.5);
+        }
+        .feature-card.card-student::before {
+            background: #5bb4e8;
+        }
+        .feature-card.card-teacher::before {
+            background: #4caf84;
+        }
+        .feature-card.card-security::before {
+            background: #f59e0b;
+        }
+        .feature-card.card-earnings::before {
+            background: #8b5cf6;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: #c8dae8;
+        }
+        .feature-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .feature-card:hover .feature-icon-wrap {
+            transform: scale(1.08);
+        }
+        .feature-icon-wrap.blue {
+            background: #d4e7f5;
+            color: #0b2b44;
+        }
+        .feature-icon-wrap.green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .feature-icon-wrap.amber {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .feature-icon-wrap.purple {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b2b44;
+        }
+        .feature-card p {
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+        .feature-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #e8eef4;
+        }
+        .feature-stat-chip {
+            background: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #334e68;
+            white-space: nowrap;
+        }
+        .feature-stat-chip strong {
+            color: #0b2b44;
+        }
+
+        /* ── Badges Section ── */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+        .badge-card {
+            background: white;
+            border: 1px solid #e3edf6;
+            border-radius: var(--radius-lg);
+            padding: 24px 16px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .badge-medal {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: all 0.4s;
+            position: relative;
+        }
+        .badge-card:hover .badge-medal {
+            transform: scale(1.12) rotate(5deg);
+        }
+        .badge-medal.diamond {
+            background: linear-gradient(135deg, #e0f0ff 0%, #b8d8f0 40%, #88bbdd 70%, #aac8e8 100%);
+            border: 3px solid #88bbdd;
+            box-shadow: 0 0 24px rgba(120, 180, 220, 0.4), inset 0 0 18px rgba(255, 255, 255, 0.5);
+        }
+        .badge-medal.platinum {
+            background: linear-gradient(135deg, #e8e8f0 0%, #c8c8d8 40%, #a0a0b8 70%, #b8b8cc 100%);
+            border: 3px solid #a0a0b8;
+            box-shadow: 0 0 20px rgba(150, 150, 180, 0.35), inset 0 0 14px rgba(255, 255, 255, 0.45);
+        }
+        .badge-medal.gold {
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 40%, #f59e0b 70%, #fbbf24 100%);
+            border: 3px solid #d97706;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35), inset 0 0 14px rgba(255, 255, 255, 0.45);
+        }
+        .badge-medal.silver {
+            background: linear-gradient(135deg, #e8e8ee 0%, #c0c0c8 40%, #a0a0a8 70%, #b8b8c0 100%);
+            border: 3px solid #888;
+            box-shadow: 0 0 16px rgba(140, 140, 150, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.4);
+        }
+        .badge-medal.bronze {
+            background: linear-gradient(135deg, #fde8d0 0%, #e8a870 40%, #c0763a 70%, #d4945a 100%);
+            border: 3px solid #a0522d;
+            box-shadow: 0 0 14px rgba(180, 120, 60, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.35);
+        }
+        .badge-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0b2b44;
+        }
+        .badge-card .badge-subtitle {
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+        .badge-progress {
+            width: 100%;
+            height: 5px;
+            background: #e8eef4;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .badge-progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+        .badge-progress-fill.gold-fill {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+        }
+        .badge-progress-fill.silver-fill {
+            background: linear-gradient(to right, #999, #bbb);
+        }
+        .badge-progress-fill.bronze-fill {
+            background: linear-gradient(to right, #c0763a, #d4945a);
+        }
+        .badge-progress-fill.platinum-fill {
+            background: linear-gradient(to right, #a0a0b8, #c8c8d8);
+        }
+        .badge-progress-fill.diamond-fill {
+            background: linear-gradient(to right, #88bbdd, #b8d8f0);
+        }
+
+        /* ── Achievement counter ── */
+        .achievement-counter-row {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding: 28px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+        }
+        .achievement-counter-item {
+            text-align: center;
+        }
+        .achievement-counter-item .count {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #0b2b44;
+            letter-spacing: -1px;
+        }
+        .achievement-counter-item .count-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* ── Lava Section ── */
+        .antigravity-section {
+            background: #03050a;
+            width: 100%;
+            height: 100vh;
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+            isolation: isolate;
+        }
+        #lavaCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            filter: blur(18px) contrast(1.1);
+            opacity: 0.95;
+        }
+        .depth-fog {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(20, 70, 110, 0.25) 0%, rgba(0, 0, 0, 0.8) 80%);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .antigravity-text {
+            font-size: clamp(5rem, 13vw, 15rem);
+            font-family: "Orbitron", sans-serif;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: white;
+            text-align: center;
+            line-height: 0.9;
+            position: relative;
+            z-index: 5;
+            text-shadow: 0 0 40px rgba(0, 160, 255, 0.7), 0 20px 60px rgba(0, 0, 0, 0.9);
+            mix-blend-mode: difference;
+            pointer-events: none;
+            user-select: none;
+        }
+        .antigravity-text .blue-i {
+            color: #5bb4e8;
+            display: inline-block;
+            text-shadow: 0 0 60px #2b7a9c, 0 0 120px #0a3142;
+            filter: drop-shadow(0 0 20px #3f9ed6);
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: #0b1f2f;
+            color: #cbd5e1;
+            padding: 70px 0 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 44px;
+        }
+        footer h4 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 14px;
+        }
+        footer p,
+        footer a {
+            font-size: 0.9rem;
+            color: #b9c7da;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+        footer a:hover {
+            color: white;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 22px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* ── Responsive ── */
+        @@media (max-width: 1100px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .badges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @@media (max-width: 900px) {
+            .monitor-section {
+                padding: 60px 0;
+            }
+            .showcase-header h2 {
+                font-size: 2rem;
+            }
+            .monitor-mockup {
+                transform: none !important;
+                width: 94%;
+            }
+            .monitor-mockup:hover {
+                transform: none !important;
+            }
+            .monitor-shadow {
+                transform: none !important;
+            }
+            .ide-sidebar {
+                display: none;
+            }
+            .hero .container,
+            .cards-3,
+            .split-cards,
+            .footer-grid,
+            .photo-showcase,
+            .steps-grid,
+            .stats-grid,
+            .testimonial-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .navbar .container {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero-visual {
+                height: 260px;
+            }
+            .antigravity-text {
+                font-size: clamp(3rem, 12vw, 8rem);
+            }
+            .track-slide {
+                min-height: 350px;
+                padding: 40px 24px;
+            }
+            .track-content h3 {
+                font-size: 1.8rem;
+            }
+            .achievement-counter-row {
+                gap: 24px;
+            }
+        }
+        @@media (max-width: 600px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .badge-card {
+                padding: 16px 10px;
+            }
+            .badge-medal {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════ NAVBAR ═══════════════ -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="brand" asp-controller="Home" asp-action="Index">Track Finder</a>
+            <div class="nav-links">
+                <a href="#courses">Courses</a>
+                <a href="#tracks-languages">Tracks</a>
+                <a href="#platform-features">Platform</a>
+                <a href="#badges-section">Badges</a>
+                <a href="#community">Community</a>
+            </div>
+            <div class="nav-actions">
+                <a class="btn-link" asp-controller="Login" asp-action="Index">Sign In</a>
+                <a class="btn btn-primary" asp-controller="Registration" asp-action="Index">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero fade-section">
+        <div class="container">
+            <div>
+                <div class="badge">Landscape of knowledge — guided paths</div>
+                <h1>Navigate your tech career with <span>expert roadmaps</span></h1>
+                <p>Students access structured courses, live mentorship, and a supportive community. Instructors build courses and answer questions to shape the next generation.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" asp-controller="Registration" asp-action="Index">Explore tracks</a>
+                    <a class="btn btn-outline" href="#platform-features">See platform</a>
+                </div>
+            </div>
+            <div class="hero-visual" id="heroVisual">
+                <div class="cube-ambient-glow"></div>
+                <div class="cube-scaler">
+                    <div class="cube" id="heroCube">
+                        <div class="cube-face front"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face bottom"></div>
+                        <div class="cube-core"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ TRACKS ═══════════════ -->
+    <section class="section fade-section" id="tracks-languages">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore tracks and programming languages</h2>
+                <p class="subtitle">Each career path comes with curated languages and technologies</p>
+                <div class="underline"></div>
+            </div>
+            <div class="tracks-showcase">
+                <div class="track-slide active" style="background-image: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);">
+                    <div class="track-content">
+                        <h3>Web Development</h3>
+                        <div class="languages">
+                            <span class="language-tag">JavaScript</span><span class="language-tag">TypeScript</span><span class="language-tag">React</span><span class="language-tag">Node.js</span><span class="language-tag">HTML/CSS</span><span class="language-tag">Python</span>
+                        </div>
+                        <p>Build modern, responsive web applications from frontend to backend with industry-standard tools.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+                <div class="track-slide" style="background-image: linear-gradient(135deg, #1b1b2f 0%, #2d1b3d 40%, #4a1a5e 100%);">
+                    <div class="track-content">
+                        <h3>Mobile Development</h3>
+                        <div class="languages">
+                            <span class="language-tag">Swift</span><span class="language-tag">Kotlin</span><span class="language-tag">Flutter</span><span class="language-tag">Dart</span><span class="language-tag">React Native</span><span class="language-tag">Java</span>
+                        </div>
+                        <p>Create stunning iOS and Android applications using native and cross-platform frameworks.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+                <div class="track-slide" style="background-image: linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 40%, #1a5c7a 100%);">
+                    <div class="track-content">
+                        <h3>AI & Data Science</h3>
+                        <div class="languages">
+                            <span class="language-tag">Python</span><span class="language-tag">R</span><span class="language-tag">TensorFlow</span><span class="language-tag">PyTorch</span><span class="language-tag">SQL</span><span class="language-tag">Julia</span>
+                        </div>
+                        <p>Dive into machine learning, deep learning, and data analysis with cutting-edge tools.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+                <div class="track-slide" style="background-image: linear-gradient(135deg, #0f2027 0%, #203a43 40%, #2c5364 100%);">
+                    <div class="track-content">
+                        <h3>Cloud Engineering</h3>
+                        <div class="languages">
+                            <span class="language-tag">AWS</span><span class="language-tag">Azure</span><span class="language-tag">Docker</span><span class="language-tag">Kubernetes</span><span class="language-tag">Terraform</span><span class="language-tag">Go</span>
+                        </div>
+                        <p>Master cloud infrastructure, DevOps practices, and scalable system architecture.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+                <div class="track-slide" style="background-image: linear-gradient(135deg, #1a1a0f 0%, #2d2d1a 40%, #4a4a1a 100%);">
+                    <div class="track-content">
+                        <h3>Game Development</h3>
+                        <div class="languages">
+                            <span class="language-tag">C++</span><span class="language-tag">C#</span><span class="language-tag">Unity</span><span class="language-tag">Unreal Engine</span><span class="language-tag">Python</span><span class="language-tag">Lua</span>
+                        </div>
+                        <p>Bring interactive worlds to life with powerful game engines and programming languages.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+                <div class="track-slide" style="background-image: linear-gradient(135deg, #0d1b1a 0%, #1a3d3d 40%, #1a5c5c 100%);">
+                    <div class="track-content">
+                        <h3>Cybersecurity</h3>
+                        <div class="languages">
+                            <span class="language-tag">Python</span><span class="language-tag">C</span><span class="language-tag">Assembly</span><span class="language-tag">Bash</span><span class="language-tag">PowerShell</span><span class="language-tag">SQL</span>
+                        </div>
+                        <p>Protect systems and networks with advanced security techniques and ethical hacking skills.</p>
+                        <a class="btn btn-white" asp-controller="Registration" asp-action="Index">Start this track</a>
+                    </div>
+                </div>
+            </div>
+            <div class="track-nav" id="trackNav">
+                <button class="track-dot active-dot" data-index="0"></button>
+                <button class="track-dot" data-index="1"></button>
+                <button class="track-dot" data-index="2"></button>
+                <button class="track-dot" data-index="3"></button>
+                <button class="track-dot" data-index="4"></button>
+                <button class="track-dot" data-index="5"></button>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 40px; margin-top: 8px; flex-wrap: wrap;">
+                <span class="track-label">Web</span><span class="track-label">Mobile</span><span class="track-label">AI/Data</span><span class="track-label">Cloud</span><span class="track-label">Game Dev</span><span class="track-label">Security</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ REDESIGNED MONITOR WITH IDE ═══════════════ -->
+    <!-- ═══════════════ REDESIGNED MONITOR - WHITE INTERACTIVE DASHBOARD ═══════════════ -->
+    <section class="monitor-section fade-section" id="platform-showcase">
+        <div class="monitor-glow"></div>
+        <div class="showcase-header">
+            <span class="showcase-badge">Interactive Platform Demo</span>
+            <h2>Explore Our Complete Protocol</h2>
+            <p>Click each module to discover the full suite of services for students and instructors</p>
+        </div>
+        <div class="monitor-mockup">
+            <div class="monitor-frame">
+                <div class="monitor-screen" style="background:#ffffff; color:#1e293b; font-family:'Hanken Grotesk',sans-serif; font-size:0.8rem;">
+                    <div style="display:flex; width:100%; height:100%;">
+                        <!-- Sidebar -->
+                        <div style="width:185px; background:#f8fafc; border-right:1px solid #e2e8f0; padding:16px 12px; display:flex; flex-direction:column; gap:3px; flex-shrink:0; overflow-y:auto;">
+                            <div style="font-weight:700; font-size:0.65rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; padding:0 6px;">Platform Protocol</div>
+                            <div class="screen-tab active" data-tab="student" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#0b2b44; background:#e0f0ff; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#d4e7f5; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">SH</span> Student Hub
+                            </div>
+                            <div class="screen-tab" data-tab="teacher" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#475569; background:transparent; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#d1fae5; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">TS</span> Teacher Studio
+                            </div>
+                            <div class="screen-tab" data-tab="security" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#475569; background:transparent; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#fef3c7; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">SG</span> Security Gate
+                            </div>
+                            <div class="screen-tab" data-tab="earnings" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#475569; background:transparent; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#ede9fe; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">EL</span> Earnings Log
+                            </div>
+                            <div class="screen-tab" data-tab="learning" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#475569; background:transparent; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#fce7f3; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">LE</span> Learning
+                            </div>
+                            <div class="screen-tab" data-tab="achievements" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.72rem; color:#475569; background:transparent; transition:all 0.2s;">
+                                <span style="width:28px; height:28px; background:#fff7ed; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">AG</span> Achievements
+                            </div>
+                        </div>
+                        <!-- Main Content -->
+                        <div style="flex:1; padding:20px 24px; display:flex; flex-direction:column; overflow:hidden;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #e2e8f0; flex-shrink:0;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="width:7px; height:7px; background:#22c55e; border-radius:50%;"></span>
+                                    <span style="font-size:0.68rem; color:#64748b; font-weight:500;">System Active — All Services Operational</span>
+                                </div>
+                                <span style="font-size:0.62rem; color:#94a3b8; font-weight:500;">Track Finder Protocol v3.2</span>
+                            </div>
+                            <div style="flex:1; overflow-y:auto; padding-right:4px;">
+
+                                <!-- STUDENT HUB PANEL -->
+                                <div class="screen-panel active" id="panel-student" style="display:block;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#0b2b44; margin-bottom:4px;">Student Hub — Collaborative Programming Ecosystem</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">A thriving community where learners and mentors collaborate, share knowledge, and build real-world skills together.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">18.5K</div><div style="font-size:0.6rem; color:#64748b;">Active Students</div></div>
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">420+</div><div style="font-size:0.6rem; color:#64748b;">Instructors</div></div>
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">65K+</div><div style="font-size:0.6rem; color:#64748b;">Discussions Solved</div></div>
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">4.2K</div><div style="font-size:0.6rem; color:#64748b;">Shared Projects</div></div>
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">92%</div><div style="font-size:0.6rem; color:#64748b;">Response Rate</div></div>
+                                        <div style="background:#f0f9ff; border:1px solid #e0f0ff; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#0b2b44;">850+</div><div style="font-size:0.6rem; color:#64748b;">Study Groups</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Q&A Forums</span>
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Code Reviews</span>
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Weekly Challenges</span>
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Study Groups</span>
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Interview Prep</span>
+                                        <span style="background:#e0f0ff; color:#0369a1; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Open Source</span>
+                                    </div>
+                                </div>
+
+                                <!-- TEACHER STUDIO PANEL -->
+                                <div class="screen-panel" id="panel-teacher" style="display:none;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#065f46; margin-bottom:4px;">Teacher Studio — Complete Instructor Workspace</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">Build courses, track student progress, manage revenue, and grow your teaching brand with professional tools.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">1,250</div><div style="font-size:0.6rem; color:#64748b;">Published Courses</div></div>
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">240K</div><div style="font-size:0.6rem; color:#64748b;">Enrollments</div></div>
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">98%</div><div style="font-size:0.6rem; color:#64748b;">Satisfaction</div></div>
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">81%</div><div style="font-size:0.6rem; color:#64748b;">Avg Completion</div></div>
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">AI</div><div style="font-size:0.6rem; color:#64748b;">Content Assistant</div></div>
+                                        <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#065f46;">Live</div><div style="font-size:0.6rem; color:#64748b;">Class Scheduling</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Course Builder</span>
+                                        <span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Video Uploads</span>
+                                        <span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Quizzes</span>
+                                        <span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Analytics</span>
+                                        <span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Revenue</span>
+                                    </div>
+                                </div>
+
+                                <!-- SECURITY GATE PANEL -->
+                                <div class="screen-panel" id="panel-security" style="display:none;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#92400e; margin-bottom:4px;">Security Gate — Multi-Layer Content Protection</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">Enterprise-grade security protecting instructor content and student data with continuous monitoring.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">99.9%</div><div style="font-size:0.6rem; color:#64748b;">Uptime</div></div>
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">AES-256</div><div style="font-size:0.6rem; color:#64748b;">Encryption</div></div>
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">24/7</div><div style="font-size:0.6rem; color:#64748b;">Monitoring</div></div>
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">Daily</div><div style="font-size:0.6rem; color:#64748b;">Encrypted Backups</div></div>
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">MFA</div><div style="font-size:0.6rem; color:#64748b;">Authentication</div></div>
+                                        <div style="background:#fffbf0; border:1px solid #fef3c7; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#92400e;">SSL</div><div style="font-size:0.6rem; color:#64748b;">Secure Payments</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Encrypted Streaming</span>
+                                        <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Device Verification</span>
+                                        <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Anti-Sharing</span>
+                                        <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Cloud Backups</span>
+                                    </div>
+                                </div>
+
+                                <!-- EARNINGS LOG PANEL -->
+                                <div class="screen-panel" id="panel-earnings" style="display:none;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#5b21b6; margin-bottom:4px;">Earnings Log — Maximize Your Revenue</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">Transparent earnings with one of the lowest platform fees, weekly payouts, and detailed financial analytics.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">5%</div><div style="font-size:0.6rem; color:#64748b;">Platform Fee</div></div>
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">Weekly</div><div style="font-size:0.6rem; color:#64748b;">Payouts</div></div>
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">$3.2M+</div><div style="font-size:0.6rem; color:#64748b;">Paid to Instructors</div></div>
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">98%</div><div style="font-size:0.6rem; color:#64748b;">Payout Success</div></div>
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">Reports</div><div style="font-size:0.6rem; color:#64748b;">Monthly Financial</div></div>
+                                        <div style="background:#f5f3ff; border:1px solid #ede9fe; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#5b21b6;">Referral</div><div style="font-size:0.6rem; color:#64748b;">Rewards Program</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <span style="background:#ede9fe; color:#5b21b6; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Revenue Analytics</span>
+                                        <span style="background:#ede9fe; color:#5b21b6; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Sales Tracking</span>
+                                        <span style="background:#ede9fe; color:#5b21b6; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Coupons</span>
+                                        <span style="background:#ede9fe; color:#5b21b6; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Referrals</span>
+                                    </div>
+                                </div>
+
+                                <!-- LEARNING EXPERIENCE PANEL -->
+                                <div class="screen-panel" id="panel-learning" style="display:none;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#9d174d; margin-bottom:4px;">Learning Experience — Immersive Skill Development</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">Interactive coding playgrounds, real-world projects, AI assistance, and personalized roadmaps for every learner.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">Interactive</div><div style="font-size:0.6rem; color:#64748b;">Coding Playground</div></div>
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">Real-World</div><div style="font-size:0.6rem; color:#64748b;">Projects</div></div>
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">AI</div><div style="font-size:0.6rem; color:#64748b;">Coding Assistant</div></div>
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">Live</div><div style="font-size:0.6rem; color:#64748b;">Coding Sessions</div></div>
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">Personalized</div><div style="font-size:0.6rem; color:#64748b;">Roadmap</div></div>
+                                        <div style="background:#fdf2f8; border:1px solid #fce7f3; border-radius:10px; padding:12px;"><div style="font-size:1.2rem; font-weight:800; color:#9d174d;">Certificates</div><div style="font-size:0.6rem; color:#64748b;">After Completion</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <span style="background:#fce7f3; color:#9d174d; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Progress Tracking</span>
+                                        <span style="background:#fce7f3; color:#9d174d; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Skill Assessments</span>
+                                        <span style="background:#fce7f3; color:#9d174d; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Gamification</span>
+                                    </div>
+                                </div>
+
+                                <!-- ACHIEVEMENTS PANEL -->
+                                <div class="screen-panel" id="panel-achievements" style="display:none;">
+                                    <h3 style="font-size:1.2rem; font-weight:700; color:#c2410c; margin-bottom:4px;">Achievements & Gamification</h3>
+                                    <p style="color:#64748b; font-size:0.7rem; margin-bottom:14px; line-height:1.4;">Earn badges, XP points, and climb leaderboards while mastering new skills.</p>
+                                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:10px;">
+                                        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#c2410c;">First Course</div><div style="font-size:0.55rem; color:#64748b;">Student Badge</div></div>
+                                        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#c2410c;">30-Day Streak</div><div style="font-size:0.55rem; color:#64748b;">Student Badge</div></div>
+                                        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#c2410c;">Bug Hunter</div><div style="font-size:0.55rem; color:#64748b;">Student Badge</div></div>
+                                        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#c2410c;">Quiz Champion</div><div style="font-size:0.55rem; color:#64748b;">Student Badge</div></div>
+                                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#92400e;">Mentor of Month</div><div style="font-size:0.55rem; color:#64748b;">Teacher Badge</div></div>
+                                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#92400e;">1K Students</div><div style="font-size:0.55rem; color:#64748b;">Teacher Badge</div></div>
+                                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#92400e;">5-Star Educator</div><div style="font-size:0.55rem; color:#64748b;">Teacher Badge</div></div>
+                                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px; text-align:center;"><div style="font-weight:700; font-size:0.65rem; color:#92400e;">Master Instructor</div><div style="font-size:0.55rem; color:#64748b;">Teacher Badge</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:6px;">
+                                        <span style="background:#fed7aa; color:#c2410c; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">XP Points</span>
+                                        <span style="background:#fed7aa; color:#c2410c; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Levels</span>
+                                        <span style="background:#fed7aa; color:#c2410c; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Daily Missions</span>
+                                        <span style="background:#fed7aa; color:#c2410c; padding:3px 8px; border-radius:14px; font-size:0.6rem; font-weight:600;">Leaderboards</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════ PLATFORM FEATURES ═══════════════ -->
+    <section class="section section-alt fade-section" id="platform-features">
+        <div class="container">
+            <div class="section-title">
+                <span class="showcase-badge" style="background:rgba(43,122,156,0.1);border-color:rgba(43,122,156,0.25);color:#2b7a9c;">Platform Pillars</span>
+                <h2>Everything you need in one ecosystem</h2>
+                <p class="subtitle">Four powerful modules working together to support students and instructors</p>
+                <div class="underline"></div>
+            </div>
+            <div class="features-grid">
+                <!-- Student Hub -->
+                <div class="feature-card card-student">
+                    <div class="feature-icon-wrap blue">S</div>
+                    <h3>Student Hub</h3>
+                    <p>An active community where students and instructors ask questions, share knowledge, solve programming problems together, collaborate on projects, and help each other grow.</p>
+                    <div class="feature-stats">
+                        <span class="feature-stat-chip">Active Students: <strong>18,500+</strong></span>
+                        <span class="feature-stat-chip">Instructors: <strong>420+</strong></span>
+                        <span class="feature-stat-chip">Discussions: <strong>65K+</strong></span>
+                        <span class="feature-stat-chip">Solved Questions: <strong>12K+</strong></span>
+                    </div>
+                </div>
+                <!-- Teacher Studio -->
+                <div class="feature-card card-teacher">
+                    <div class="feature-icon-wrap green">T</div>
+                    <h3>Teacher Studio</h3>
+                    <p>A professional workspace where instructors create courses, manage students, publish learning content, monitor progress, and build their teaching brand with powerful analytics.</p>
+                    <div class="feature-stats">
+                        <span class="feature-stat-chip">Published Courses: <strong>1,250</strong></span>
+                        <span class="feature-stat-chip">Satisfaction: <strong>98%</strong></span>
+                        <span class="feature-stat-chip">Enrollments: <strong>240K</strong></span>
+                        <span class="feature-stat-chip">Live Analytics</span>
+                    </div>
+                </div>
+                <!-- Security Gate -->
+                <div class="feature-card card-security">
+                    <div class="feature-icon-wrap amber">G</div>
+                    <h3>Security Gate</h3>
+                    <p>We protect course content using multiple layers of security to reduce unauthorized downloads and protect instructor materials and student data as much as possible.</p>
+                    <div class="feature-stats">
+                        <span class="feature-stat-chip">256-bit Encryption</span>
+                        <span class="feature-stat-chip">Protected Streaming</span>
+                        <span class="feature-stat-chip">Secure Storage</span>
+                        <span class="feature-stat-chip">Daily Monitoring</span>
+                    </div>
+                </div>
+                <!-- Earnings Log -->
+                <div class="feature-card card-earnings">
+                    <div class="feature-icon-wrap purple">E</div>
+                    <h3>Earnings Log</h3>
+                    <p>We believe instructors deserve more. Our platform takes one of the lowest commission rates, helping creators maximize earnings while keeping education affordable.</p>
+                    <div class="feature-stats">
+                        <span class="feature-stat-chip">Only 5% Platform Fee</span>
+                        <span class="feature-stat-chip">Fast Weekly Payouts</span>
+                        <span class="feature-stat-chip">Revenue Analytics</span>
+                        <span class="feature-stat-chip">Transparent Reports</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ BADGES & ACHIEVEMENTS ═══════════════ -->
+    <section class="section fade-section" id="badges-section">
+        <div class="container">
+            <div class="section-title">
+                <span class="showcase-badge" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#d97706;">Gamified Learning</span>
+                <h2>Badges & Achievements</h2>
+                <p class="subtitle">Earn recognition for every milestone. Students and teachers alike unlock rewards that showcase their dedication.</p>
+                <div class="underline"></div>
+            </div>
+            <!-- Student Badges -->
+            <h3 style="text-align:center;color:#0b2b44;margin-bottom:24px;font-size:1.3rem;">Student Badges</h3>
+            <div class="badges-grid" style="margin-bottom:40px;">
+                <div class="badge-card">
+                    <div class="badge-medal gold">C</div>
+                    <h4>Course Champion</h4>
+                    <span class="badge-subtitle">Complete a full course track</span>
+                    <div class="badge-progress"><div class="badge-progress-fill gold-fill" style="width:88%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal diamond">S</div>
+                    <h4>Streak Master</h4>
+                    <span class="badge-subtitle">30-day daily learning streak</span>
+                    <div class="badge-progress"><div class="badge-progress-fill diamond-fill" style="width:72%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal platinum">P</div>
+                    <h4>Problem Solver</h4>
+                    <span class="badge-subtitle">Solve 100 coding challenges</span>
+                    <div class="badge-progress"><div class="badge-progress-fill platinum-fill" style="width:65%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal silver">H</div>
+                    <h4>Helper Hero</h4>
+                    <span class="badge-subtitle">Help 50 other students</span>
+                    <div class="badge-progress"><div class="badge-progress-fill silver-fill" style="width:54%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal gold">B</div>
+                    <h4>Project Builder</h4>
+                    <span class="badge-subtitle">Finish 5 real-world projects</span>
+                    <div class="badge-progress"><div class="badge-progress-fill gold-fill" style="width:78%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal diamond">A</div>
+                    <h4>Perfect Score</h4>
+                    <span class="badge-subtitle">Ace quizzes with 100%</span>
+                    <div class="badge-progress"><div class="badge-progress-fill diamond-fill" style="width:91%;"></div></div>
+                </div>
+            </div>
+            <!-- Teacher Badges -->
+            <h3 style="text-align:center;color:#0b2b44;margin-bottom:24px;font-size:1.3rem;">Teacher Badges</h3>
+            <div class="badges-grid">
+                <div class="badge-card">
+                    <div class="badge-medal diamond">R</div>
+                    <h4>Top-Rated Instructor</h4>
+                    <span class="badge-subtitle">Maintain 4.8+ star rating</span>
+                    <div class="badge-progress"><div class="badge-progress-fill diamond-fill" style="width:94%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal gold">F</div>
+                    <h4>Fast Responder</h4>
+                    <span class="badge-subtitle">Reply within 2 hours avg</span>
+                    <div class="badge-progress"><div class="badge-progress-fill gold-fill" style="width:85%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal platinum">M</div>
+                    <h4>Best Mentor</h4>
+                    <span class="badge-subtitle">Recognized by student votes</span>
+                    <div class="badge-progress"><div class="badge-progress-fill platinum-fill" style="width:70%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal gold">E</div>
+                    <h4>Course Excellence</h4>
+                    <span class="badge-subtitle">Course rated 4.9+ by students</span>
+                    <div class="badge-progress"><div class="badge-progress-fill gold-fill" style="width:88%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal silver">C</div>
+                    <h4>Community Contributor</h4>
+                    <span class="badge-subtitle">Active in forums & discussions</span>
+                    <div class="badge-progress"><div class="badge-progress-fill silver-fill" style="width:60%;"></div></div>
+                </div>
+                <div class="badge-card">
+                    <div class="badge-medal diamond">K</div>
+                    <h4>Thousands Taught</h4>
+                    <span class="badge-subtitle">Reach 1,000+ students</span>
+                    <div class="badge-progress"><div class="badge-progress-fill diamond-fill" style="width:76%;"></div></div>
+                </div>
+            </div>
+            <!-- Achievement Counters -->
+            <div class="achievement-counter-row">
+                <div class="achievement-counter-item">
+                    <div class="count">350K+</div>
+                    <div class="count-label">Badges Earned</div>
+                </div>
+                <div class="achievement-counter-item">
+                    <div class="count">95K+</div>
+                    <div class="count-label">Achievement Unlocks</div>
+                </div>
+                <div class="achievement-counter-item">
+                    <div class="count">1M+</div>
+                    <div class="count-label">Learning Milestones</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+    <section class="section section-alt fade-section" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How Track Finder works</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3>Choose your track</h3>
+                    <p>Select a career roadmap designed by industry experts.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3>Follow lessons</h3>
+                    <p>Instructors guide you through structured courses and projects.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3>Join community</h3>
+                    <p>Ask questions, share progress, and get answers from peers and mentors.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h3>Build portfolio</h3>
+                    <p>Complete real-world projects that showcase your skills.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ POPULAR TRACKS ═══════════════ -->
+    <section class="section fade-section" id="courses">
+        <div class="container">
+            <div class="section-title">
+                <h2>Popular career tracks</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="photo-showcase">
+                <div class="photo-card" style="background-image: linear-gradient(140deg, #1e4b6b, #7fa9c7), url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 100%22%3E%3Cpath fill=%22%23ffffff%22 opacity=%22.15%22 d=%22M0 60 Q 30 30 80 50 T 200 20 L 200 100 L 0 100 Z%22/%3E%3C/svg%3E'); background-blend-mode: overlay;">
+                    <div class="photo-overlay">Full-Stack Development</div>
+                </div>
+                <div class="photo-card" style="background-image: linear-gradient(150deg, #2b5b78, #b0cfe0), url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 100%22%3E%3Ccircle cx=%2290%22 cy=%2240%22 r=%2230%22 fill=%22%23ffffff%22 opacity=%22.12%22/%3E%3C/svg%3E'); background-blend-mode: soft-light;">
+                    <div class="photo-overlay">Data Science & AI</div>
+                </div>
+                <div class="photo-card" style="background-image: linear-gradient(160deg, #15435b, #98bedb), url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 100%22%3E%3Cpath fill=%22%23ffffff%22 opacity=%22.1%22 d=%22M0 40 L 50 10 L 100 45 L 150 20 L 200 50 L 200 100 L 0 100 Z%22/%3E%3C/svg%3E'); background-blend-mode: overlay;">
+                    <div class="photo-overlay">Cloud Engineering</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOR STUDENTS / INSTRUCTORS ═══════════════ -->
+    <section class="section section-alt fade-section" id="community">
+        <div class="container">
+            <div class="split-cards">
+                <div class="split-card dark">
+                    <h3>For Students</h3>
+                    <ul>
+                        <li>Personalized learning roadmaps</li>
+                        <li>Access to expert instructors</li>
+                        <li>Community help and discussions</li>
+                        <li>Project-based tracks</li>
+                    </ul>
+                    <a class="btn-white" asp-controller="Registration" asp-action="Index">Start your journey</a>
+                </div>
+                <div class="split-card light">
+                    <h3>For Instructors</h3>
+                    <ul>
+                        <li>Build courses with rich tools</li>
+                        <li>Answer questions in community</li>
+                        <li>Manage student progress</li>
+                        <li>Grow your teaching profile</li>
+                    </ul>
+                    <a class="btn-dark" asp-controller="Registration" asp-action="Index">Become an instructor</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ STATISTICS ═══════════════ -->
+    <section class="section fade-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>18,500+</h3>
+                    <p>Active students</p>
+                </div>
+                <div class="stat-item">
+                    <h3>420+</h3>
+                    <p>Expert instructors</p>
+                </div>
+                <div class="stat-item">
+                    <h3>85+</h3>
+                    <p>Career tracks</p>
+                </div>
+                <div class="stat-item">
+                    <h3>94%</h3>
+                    <p>Career placement rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+    <section class="section section-alt fade-section" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Stories from our landscape</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p>"The roadmap feature gave me clarity I never had before. I landed a frontend role in 6 months."</p>
+                    <div class="testimonial-author">Sarah K. — Frontend Developer</div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"As an instructor, I can finally focus on teaching while the platform handles curriculum structure."</p>
+                    <div class="testimonial-author">Marcus T. — Senior Instructor</div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"The community answered my questions within hours. It felt like having a mentor 24/7."</p>
+                    <div class="testimonial-author">James L. — Data Science Student</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ CTA ═══════════════ -->
+    <section class="section fade-section">
+        <div class="container">
+            <div class="cta-banner">
+                <h2>Ready to navigate your future?</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 28px;">Join thousands of students and instructors building careers together.</p>
+                <a class="btn-white btn-large" asp-controller="Registration" asp-action="Index">Get started free</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ LAVA LAMP ═══════════════ -->
+    <section class="antigravity-section fade-section">
+        <canvas id="lavaCanvas"></canvas>
+        <div class="depth-fog"></div>
+        <h2 class="antigravity-text">
+            TrackF<span class="blue-i">i</span>nder
+        </h2>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Track Finder</h4>
+                    <p>Guiding students and instructors through structured learning landscapes.</p>
+                </div>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="#courses">All courses</a>
+                    <a href="#community">Community</a>
+                    <a href="#how-it-works">How it works</a>
+                </div>
+                <div>
+                    <h4>Instructors</h4>
+                    <a asp-controller="Registration" asp-action="Index">Teach with us</a>
+                    <a asp-controller="Login" asp-action="Index">Instructor login</a>
+                </div>
+                <div>
+                    <h4>Support</h4>
+                    <a asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+                    <a href="#footer">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; @DateTime.Now.Year Track Finder — landscapes of learning</span>
+                <span>English (US)</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+            (function() {
+                const tabs = document.querySelectorAll('.screen-tab');
+                const panels = document.querySelectorAll('.screen-panel');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => { t.classList.remove('active'); t.style.background='transparent'; t.style.color='#475569'; });
+                        tab.classList.add('active');
+                        const tabName = tab.getAttribute('data-tab');
+                        if(tabName==='student'){ tab.style.background='#e0f0ff'; tab.style.color='#0b2b44'; }
+                        else if(tabName==='teacher'){ tab.style.background='#d1fae5'; tab.style.color='#065f46'; }
+                        else if(tabName==='security'){ tab.style.background='#fef3c7'; tab.style.color='#92400e'; }
+                        else if(tabName==='earnings'){ tab.style.background='#ede9fe'; tab.style.color='#5b21b6'; }
+                        else if(tabName==='learning'){ tab.style.background='#fce7f3'; tab.style.color='#9d174d'; }
+                        else if(tabName==='achievements'){ tab.style.background='#fff7ed'; tab.style.color='#c2410c'; }
+                        panels.forEach(p => p.style.display='none');
+                        const panel = document.getElementById('panel-'+tabName);
+                        if(panel) panel.style.display='block';
+                    });
+                });
+            })();
+    </script>
+
+    <script>
+        // ═══════════════ FADE SECTIONS ON SCROLL ═══════════════
+        (function() {
+            const fadeElements = document.querySelectorAll('.fade-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+            fadeElements.forEach(el => observer.observe(el));
+
+            window.addEventListener('load', () => {
+                fadeElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 80) {
+                        el.classList.add('visible');
+                    }
+                });
+            });
+        })();
+
+        // ═══════════════ TRACK SLIDER ═══════════════
+        (function() {
+            const slides = document.querySelectorAll('.track-slide');
+            const dots = document.querySelectorAll('.track-dot');
+            let currentIndex = 0;
+            let interval;
+
+            function showSlide(index) {
+                slides.forEach(s => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active-dot'));
+                slides[index].classList.add('active');
+                dots[index].classList.add('active-dot');
+                currentIndex = index;
+            }
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.getAttribute('data-index'));
+                    showSlide(index);
+                    resetInterval();
+                });
+            });
+
+            function nextSlide() {
+                const next = (currentIndex + 1) % slides.length;
+                showSlide(next);
+            }
+
+            function resetInterval() {
+                clearInterval(interval);
+                interval = setInterval(nextSlide, 4000);
+            }
+
+            interval = setInterval(nextSlide, 4000);
+        })();
+
+        // ═══════════════ SMOOTH CUBE ROTATION WITH SPEED INTERPOLATION ═══════════════
+        (function() {
+            const cube = document.getElementById('heroCube');
+            const heroVisual = document.getElementById('heroVisual');
+            if (!cube || !heroVisual) return;
+
+            const normalSpeed = 20;
+            const hoverSpeed = normalSpeed * 0.25;
+            let currentSpeed = normalSpeed;
+            let targetSpeed = normalSpeed;
+            let rotationY = 40;
+            const lerpFactor = 0.04;
+            let lastTime = performance.now();
+
+            heroVisual.addEventListener('mouseenter', () => {
+                targetSpeed = hoverSpeed;
+            });
+
+            heroVisual.addEventListener('mouseleave', () => {
+                targetSpeed = normalSpeed;
+            });
+
+            function animate(now) {
+                const dt = Math.min((now - lastTime) / 1000, 0.1);
+                lastTime = now;
+                currentSpeed += (targetSpeed - currentSpeed) * lerpFactor;
+                rotationY += currentSpeed * dt;
+                if (rotationY > 10000) rotationY -= 360 * Math.floor(rotationY / 360);
+                cube.style.transform = 'rotateX(-25deg) rotateY(' + rotationY + 'deg)';
+                requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
+        })();
+
+        // ═══════════════ LAVA LAMP EGG BLOBS (FIXED SCROLLING) ═══════════════
+        (function() {
+            const canvas = document.getElementById('lavaCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let mouseX = 0.5,
+                mouseY = 0.5;
+            let targetMouseX = 0.5,
+                targetMouseY = 0.5;
+
+            class EggBlob {
+                constructor(index) {
+                    this.index = index;
+                    this.reset(true);
+                }
+                reset(initial) {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.baseRadius = 220 + Math.random() * 160;
+                    this.radius = this.baseRadius;
+                    const colors = [
+                        [25, 80, 130], [40, 110, 160], [70, 140, 190], [15, 55, 95],
+                        [50, 120, 175], [90, 160, 210], [30, 90, 145], [60, 130, 185],
+                        [20, 65, 110], [80, 150, 200]
+                    ];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.alphaBase = 0.25 + Math.random() * 0.4;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                    this.wobbleOffset = Math.random() * Math.PI * 2;
+                    this.deformPoints = [];
+                    this.targetDeforms = [];
+                    for (let i = 0; i < 12; i++) {
+                        this.deformPoints.push(1.0);
+                        this.targetDeforms.push(1.0);
+                    }
+                }
+                update(allBlobs, mx, my, dt) {
+                    dt = dt || 1.0;
+                    const targetX = width * mx;
+                    const targetY = height * my;
+                    const dxMouse = targetX - this.x;
+                    const dyMouse = targetY - this.y;
+                    const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse) || 1;
+                    const mouseForce = 0.012 * (1 - Math.min(distMouse / 500, 0.85));
+                    this.speedX += dxMouse * mouseForce;
+                    this.speedY += dyMouse * mouseForce;
+                    const SEPARATION_DISTANCE = 420;
+                    const ATTRACTION_DISTANCE = 650;
+                    for (let other of allBlobs) {
+                        if (other === this) continue;
+                        const dx = other.x - this.x;
+                        const dy = other.y - this.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        if (dist < SEPARATION_DISTANCE) {
+                            const force = (SEPARATION_DISTANCE - dist) / SEPARATION_DISTANCE * 0.09;
+                            this.speedX -= (dx / dist) * force;
+                            this.speedY -= (dy / dist) * force;
+                            const angleToOther = Math.atan2(dy, dx);
+                            const deformStrength = (SEPARATION_DISTANCE - dist) / SEPARATION_DISTANCE * 0.4;
+                            this.applyDeformation(angleToOther, -deformStrength);
+                        } else if (dist < ATTRACTION_DISTANCE) {
+                            const force = (dist - SEPARATION_DISTANCE) / (ATTRACTION_DISTANCE - SEPARATION_DISTANCE) * 0.03;
+                            this.speedX += (dx / dist) * force;
+                            this.speedY += (dy / dist) * force;
+                            const angleToOther = Math.atan2(dy, dx);
+                            const stretchStrength = (dist - SEPARATION_DISTANCE) / (ATTRACTION_DISTANCE - SEPARATION_DISTANCE) * 0.25;
+                            this.applyDeformation(angleToOther, stretchStrength);
+                        }
+                    }
+                    const currentSpeed = Math.sqrt(this.speedX * this.speedX + this.speedY * this.speedY);
+                    if (currentSpeed > 0.1) {
+                        const moveAngle = Math.atan2(this.speedY, this.speedX);
+                        const stretchAmount = Math.min(currentSpeed * 0.08, 0.3);
+                        this.applyDeformation(moveAngle + Math.PI, stretchAmount);
+                        this.applyDeformation(moveAngle, -stretchAmount * 0.5);
+                    }
+                    this.speedX += Math.sin(Date.now() * 0.0015 + this.wobbleOffset) * 0.018;
+                    this.speedY += Math.cos(Date.now() * 0.0018 + this.wobbleOffset) * 0.018;
+                    this.speedY += 0.03;
+                    this.speedX *= 0.995;
+                    this.speedY *= 0.995;
+                    const maxSpeed = 9.5;
+                    const speedMag = Math.sqrt(this.speedX * this.speedX + this.speedY * this.speedY);
+                    if (speedMag > maxSpeed) {
+                        this.speedX = (this.speedX / speedMag) * maxSpeed;
+                        this.speedY = (this.speedY / speedMag) * maxSpeed;
+                    }
+                    this.x += this.speedX * dt;
+                    this.y += this.speedY * dt;
+                    const margin = this.baseRadius * 0.5;
+                    if (this.x < margin) { this.x = margin;
+                        this.speedX *= -0.4; }
+                    if (this.x > width - margin) { this.x = width - margin;
+                        this.speedX *= -0.4; }
+                    if (this.y < margin) { this.y = margin;
+                        this.speedY *= -0.4; }
+                    if (this.y > height - margin) { this.y = height - margin;
+                        this.speedY *= -0.4; }
+                    for (let i = 0; i < this.deformPoints.length; i++) {
+                        this.deformPoints[i] += (this.targetDeforms[i] - this.deformPoints[i]) * 0.08;
+                        this.targetDeforms[i] += (1.0 - this.targetDeforms[i]) * 0.03;
+                    }
+                    this.radius = this.baseRadius + Math.sin(Date.now() * 0.004 + this.wobbleOffset) * 20;
+                }
+                applyDeformation(angle, strength) {
+                    const normalizedAngle = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+                    const pointIndex = Math.round(normalizedAngle / (Math.PI * 2) * this.deformPoints.length) % this.deformPoints.length;
+                    for (let i = -1; i <= 1; i++) {
+                        const idx = (pointIndex + i + this.deformPoints.length) % this.deformPoints.length;
+                        const falloff = i === 0 ? 1.0 : 0.5;
+                        this.targetDeforms[idx] += strength * falloff;
+                        this.targetDeforms[idx] = Math.max(0.5, Math.min(1.6, this.targetDeforms[idx]));
+                    }
+                }
+                draw(ctx) {
+                    const [r, g, b] = this.color;
+                    const numPoints = this.deformPoints.length;
+                    ctx.beginPath();
+                    for (let i = 0; i < numPoints; i++) {
+                        const angle = (i / numPoints) * Math.PI * 2 - Math.PI / 2;
+                        const deform = this.deformPoints[i];
+                        const px = this.x + Math.cos(angle) * this.radius * deform;
+                        const py = this.y + Math.sin(angle) * this.radius * deform;
+                        if (i === 0) { ctx.moveTo(px, py); } else {
+                            const prevAngle = ((i - 1) / numPoints) * Math.PI * 2 - Math.PI / 2;
+                            const prevDeform = this.deformPoints[i - 1];
+                            const prevPx = this.x + Math.cos(prevAngle) * this.radius * prevDeform;
+                            const prevPy = this.y + Math.sin(prevAngle) * this.radius * prevDeform;
+                            ctx.quadraticCurveTo((prevPx + px) / 2, (prevPy + py) / 2, px, py);
+                        }
+                    }
+                    ctx.closePath();
+                    const gradient = ctx.createRadialGradient(this.x - this.radius * 0.2, this.y - this.radius * 0.25,
+                        this.radius * 0.1, this.x, this.y, this.radius * 1.1);
+                    gradient.addColorStop(0,
+                        'rgba(' + Math.min(255, r + 40) + ',' + Math.min(255, g + 30) + ',' + Math.min(255, b + 20) + ',' + (this.alphaBase + 0.25) + ')');
+                    gradient.addColorStop(0.4, 'rgba(' + r + ',' + g + ',' + b + ',' + (this.alphaBase + 0.1) + ')');
+                    gradient.addColorStop(0.7,
+                        'rgba(' + Math.max(0, r - 20) + ',' + Math.max(0, g - 15) + ',' + Math.max(0, b - 10) + ',' + (this.alphaBase * 0.5) + ')');
+                    gradient.addColorStop(1,
+                        'rgba(' + Math.max(0, r - 40) + ',' + Math.max(0, g - 30) + ',' + Math.max(0, b - 15) + ',0)');
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                    const highlightGrad = ctx.createRadialGradient(this.x - this.radius * 0.25, this.y - this.radius * 0.3,
+                        this.radius * 0.05, this.x - this.radius * 0.15, this.y - this.radius * 0.2, this.radius * 0.45);
+                    highlightGrad.addColorStop(0, 'rgba(220,235,255,' + (this.alphaBase * 0.5) + ')');
+                    highlightGrad.addColorStop(1, 'rgba(180,210,255,0)');
+                    ctx.beginPath();
+                    for (let i = 0; i < numPoints; i++) {
+                        const angle = (i / numPoints) * Math.PI * 2 - Math.PI / 2;
+                        const deform = this.deformPoints[i];
+                        const px = this.x + Math.cos(angle) * this.radius * deform;
+                        const py = this.y + Math.sin(angle) * this.radius * deform;
+                        if (i === 0) ctx.moveTo(px, py);
+                        else {
+                            const prevAngle = ((i - 1) / numPoints) * Math.PI * 2 - Math.PI / 2;
+                            const prevDeform = this.deformPoints[i - 1];
+                            const prevPx = this.x + Math.cos(prevAngle) * this.radius * prevDeform;
+                            const prevPy = this.y + Math.sin(prevAngle) * this.radius * prevDeform;
+                            ctx.quadraticCurveTo((prevPx + px) / 2, (prevPy + py) / 2, px, py);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.fillStyle = highlightGrad;
+                    ctx.fill();
+                }
+            }
+
+            const blobs = [];
+            const BLOB_COUNT = 8;
+
+            function resizeCanvas() {
+                const section = document.querySelector('.antigravity-section');
+                if (section) {
+                    width = section.clientWidth;
+                    height = section.clientHeight;
+                } else {
+                    width = window.innerWidth;
+                    height = window.innerHeight;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                blobs.forEach(b => {
+                    b.x = Math.min(width, Math.max(0, b.x));
+                    b.y = Math.min(height, Math.max(0, b.y));
+                });
+            }
+
+            function initBlobs() {
+                blobs.length = 0;
+                for (let i = 0; i < BLOB_COUNT; i++) {
+                    blobs.push(new EggBlob(i));
+                }
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            const section = document.querySelector('.antigravity-section');
+            if (section) {
+                section.addEventListener('mousemove', (e) => {
+                    const rect = section.getBoundingClientRect();
+                    targetMouseX = (e.clientX - rect.left) / rect.width;
+                    targetMouseY = (e.clientY - rect.top) / rect.height;
+                });
+                section.addEventListener('mouseleave', () => {
+                    targetMouseX = 0.5;
+                    targetMouseY = 0.5;
+                });
+            }
+
+            function updateMouse() {
+                mouseX += (targetMouseX - mouseX) * 0.05;
+                mouseY += (targetMouseY - mouseY) * 0.05;
+            }
+            let lastTimeLava = performance.now();
+
+            function animateLava(now) {
+                let dt = (now - lastTimeLava) / 16.6;
+                if (dt > 3) dt = 3;
+                lastTimeLava = now;
+                updateMouse();
+                ctx.clearRect(0, 0, width, height);
+                const bgGrad = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height) * 0.7);
+                bgGrad.addColorStop(0, '#020810');
+                bgGrad.addColorStop(1, '#010308');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, width, height);
+                for (let b of blobs) { b.update(blobs, mouseX, mouseY, dt); }
+                for (let b of blobs) { b.draw(ctx); }
+                requestAnimationFrame(animateLava);
+            }
+
+            resizeCanvas();
+            initBlobs();
+            requestAnimationFrame(animateLava);
+        })();
+    </script>
+</body>
+</html>

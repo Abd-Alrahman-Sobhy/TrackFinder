@@ -1,0 +1,357 @@
+@model IEnumerable<TrackFinder.Models.UserModels.User>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // Determine roles using navigation properties (the actual source of truth)
+    var allUsers = Model.ToList();
+    var instructorUsers = allUsers.Where(u => u.Instructor != null).ToList();
+    var studentUsers = allUsers.Where(u => u.Student != null).ToList();
+    var adminUsers = allUsers.Where(u => u.Instructor == null && u.Student == null).ToList();
+    var bannedUsers = allUsers.Where(u => u.IsBanned).ToList();
+    var pendingInstructors = allUsers.Where(u => u.Instructor != null && !u.Instructor.AdminApproved).ToList();
+}
+
+<div class="container-fluid">
+
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                Manage Accounts
+            </h2>
+
+            <p class="text-muted mb-0">
+                View all users, ban/unban accounts, and approve instructors.
+            </p>
+        </div>
+
+        <span class="badge bg-primary fs-6 px-3 py-2">
+            @allUsers.Count Users
+        </span>
+
+    </div>
+
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+
+
+    <!-- Filter Tabs -->
+    <ul class="nav nav-pills mb-4" id="userFilter">
+
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-filter="all">
+                All
+                <span class="badge bg-light text-dark ms-1">@allUsers.Count</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-filter="Student">
+                <i class="bi bi-mortarboard me-1"></i>Students
+                <span class="badge bg-light text-dark ms-1">@studentUsers.Count</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-filter="Instructor">
+                <i class="bi bi-person-video3 me-1"></i>Instructors
+                <span class="badge bg-light text-dark ms-1">@instructorUsers.Count</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-filter="Admin">
+                <i class="bi bi-shield-lock me-1"></i>Admins
+                <span class="badge bg-light text-dark ms-1">@adminUsers.Count</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-filter="Banned">
+                <i class="bi bi-slash-circle me-1"></i>Banned
+                <span class="badge bg-light text-dark ms-1">@bannedUsers.Count</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-filter="PendingInstructor">
+                <i class="bi bi-hourglass-split me-1"></i>Pending Instructors
+                <span class="badge bg-light text-dark ms-1">@pendingInstructors.Count</span>
+            </a>
+        </li>
+
+    </ul>
+
+
+
+    <!-- Users Table -->
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Instructor Status</th>
+                            <th>Joined</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var user in allUsers)
+                        {
+                            var isInstructor = user.Instructor != null;
+                            var isStudent = user.Student != null;
+                            var isAdmin = !isInstructor && !isStudent;
+                            var isPendingInstructor = isInstructor && !user.Instructor!.AdminApproved;
+
+                            var effectiveRole = isInstructor ? "Instructor" : isStudent ? "Student" : "Admin";
+
+                            <tr class="user-row"
+                                data-role="@effectiveRole"
+                                data-banned="@user.IsBanned.ToString()"
+                                data-pending-instructor="@isPendingInstructor.ToString()">
+
+                                <!-- User Info -->
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+
+                                        @if (!string.IsNullOrEmpty(user.ProfilePictureUrl))
+                                        {
+                                            <img src="@user.ProfilePictureUrl"
+                                                 class="rounded-circle me-3"
+                                                 style="width:40px;height:40px;object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="https://ui-avatars.com/api/?name=@user.FirstName+@user.LastName&background=4f46e5&color=fff&size=40"
+                                                 class="rounded-circle me-3"
+                                                 style="width:40px;height:40px;" />
+                                        }
+
+                                        <div>
+                                            <div class="fw-semibold">
+                                                @user.FirstName @user.LastName
+                                            </div>
+                                            <small class="text-muted">
+                                                @@@user.UserName
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+
+                                <!-- Email -->
+                                <td>
+                                    @user.Email
+                                </td>
+
+
+                                <!-- Role Badge -->
+                                <td>
+                                    @if (isAdmin)
+                                    {
+                                        <span class="badge bg-danger">Admin</span>
+                                    }
+                                    else if (isInstructor)
+                                    {
+                                        <span class="badge bg-info">Instructor</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Student</span>
+                                    }
+                                </td>
+
+
+                                <!-- Ban Status -->
+                                <td>
+                                    @if (user.IsBanned)
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-slash-circle me-1"></i>Banned
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>Active
+                                        </span>
+                                    }
+                                </td>
+
+
+                                <!-- Instructor Approval Status -->
+                                <td>
+                                    @if (isInstructor)
+                                    {
+                                        if (user.Instructor!.AdminApproved)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-patch-check me-1"></i>Approved
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-hourglass-split me-1"></i>Pending Approval
+                                            </span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+
+
+                                <!-- Joined Date -->
+                                <td>
+                                    @user.CreatedAt.ToString("dd MMM yyyy")
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td class="text-end pe-4">
+
+                                    <div class="d-flex justify-content-end gap-2">
+
+                                        @* Ban / Unban (not for admins) *@
+                                        @if (!isAdmin)
+                                        {
+                                            @if (user.IsBanned)
+                                            {
+                                                <form asp-action="Unban" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button class="btn btn-sm btn-outline-success rounded-pill"
+                                                            title="Unban this user">
+                                                        <i class="bi bi-unlock"></i> Unban
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="Ban" method="post"
+                                                      onsubmit="return confirm('Are you sure you want to ban this user?')">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button class="btn btn-sm btn-outline-danger rounded-pill"
+                                                            title="Ban this user">
+                                                        <i class="bi bi-slash-circle"></i> Ban
+                                                    </button>
+                                                </form>
+                                            }
+                                        }
+
+
+                                        @* Approve / Revoke Instructor *@
+                                        @if (isInstructor)
+                                        {
+                                            @if (!user.Instructor!.AdminApproved)
+                                            {
+                                                <form asp-action="ApproveInstructor" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button class="btn btn-sm btn-success rounded-pill"
+                                                            title="Approve this instructor">
+                                                        <i class="bi bi-check-circle"></i> Approve
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="RevokeInstructor" method="post"
+                                                      onsubmit="return confirm('Are you sure you want to revoke instructor approval?')">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button class="btn btn-sm btn-outline-warning rounded-pill"
+                                                            title="Revoke instructor approval">
+                                                        <i class="bi bi-x-circle"></i> Revoke
+                                                    </button>
+                                                </form>
+                                            }
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.querySelectorAll('#userFilter .nav-link').forEach(link => {
+
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Toggle active class
+                document.querySelectorAll('#userFilter .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+                const rows = document.querySelectorAll('.user-row');
+
+                rows.forEach(row => {
+                    const role = row.dataset.role;
+                    const banned = row.dataset.banned === 'True';
+                    const pendingInstructor = row.dataset.pendingInstructor === 'True';
+
+                    if (filter === 'all') {
+                        row.style.display = '';
+                    } else if (filter === 'Banned') {
+                        row.style.display = banned ? '' : 'none';
+                    } else if (filter === 'PendingInstructor') {
+                        row.style.display = pendingInstructor ? '' : 'none';
+                    } else {
+                        row.style.display = role === filter ? '' : 'none';
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
+
+}

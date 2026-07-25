@@ -1,0 +1,45 @@
+@model TrackFinder.ViewModels.Communities.CreateCommunityViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Create New Community</h3>
+
+<form asp-action="Create" asp-controller="Communities" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AdminId" class="form-label">Instructor</label>
+        <select asp-for="AdminId" class="form-select" asp-items="ViewBag.Instructors">
+            <option value="">-- Select Instructor --</option>
+        </select>
+        <span asp-validation-for="AdminId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Create
+    </button>
+
+    <a asp-action="Index" asp-controller="Communities" class="btn btn-secondary ms-2">
+        Cancel
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

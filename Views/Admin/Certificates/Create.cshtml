@@ -1,0 +1,32 @@
+@model TrackFinder.ViewModels.Achievements.CreateCertificateViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>New Certificate</h3>
+<form asp-action="Create" asp-controller="Certificates" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="File" class="form-label">Certificate File</label>
+        <input asp-for="File" type="file" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary">Create</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Certificates">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

@@ -1,0 +1,235 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TrackFinderDb.Models.TeachingModels;
+using TrackFinderDb.Models.TrackFinderDbContext;
+namespace TrackFinderDb.Controllers
+{
+    public class CourseController : Controller
+    {
+
+        private static List<Course> courses = new List<Course>();
+        private static List<Enrollment> enrollments = new List<Enrollment>();
+
+        public IActionResult Index()
+        {
+            if (!courses.Any())
+            {
+                courses.Add(
+                    new Course
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "C# Basics",
+                        Price = 100,
+                        Description = "Learn the fundamentals of C# programming, including variables, data types, loops, methods, object-oriented programming, and exception handling. Perfect for beginners starting their .NET development journey."
+                    });
+                courses.Add(
+                    new Course
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "HTML & CSS ",
+                        Price = 200,
+                        Description = "Build modern and responsive web pages using HTML and CSS. Learn page structure, styling, layouts, Flexbox, Grid, and responsive design techniques."
+                    });
+                courses.Add(
+                    new Course
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "JS",
+                        Price = 300,
+                        Description = "Master JavaScript fundamentals, including variables, functions, DOM manipulation, events, arrays, objects, and asynchronous programming to create interactive web applications."
+                    });
+            }
+            return View(courses);
+        }
+
+
+        public IActionResult Details(Guid id)
+        {
+            var item =courses.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return View(item);
+
+
+        }
+
+
+        public IActionResult MyCourses()
+        {
+            Guid userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            var myCourses = courses
+                .Where(c => enrollments.Any(e =>
+                    e.CourseId == c.Id && e.UserId == userId))
+                .ToList();
+
+            return View(myCourses);
+        }
+
+        [HttpGet]
+        public IActionResult EnrollmentForm(Guid id)
+        {
+            var course = courses.FirstOrDefault(c => c.Id == id);
+
+            if (course == null)
+                return NotFound();
+
+            var enrollment = new Enrollment
+            {
+                CourseId = id
+            };
+
+            return View(enrollment);
+        }
+
+
+        public IActionResult EnrollCourse(Guid courseId)
+        {
+            var enrollment = new Enrollment
+            {
+                CourseId = courseId
+            };
+
+            return View("EnrollmentForm", enrollment);
+        }
+
+        [HttpPost]
+        public IActionResult EnrollCourse(Enrollment model)
+        {
+            Guid userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            var already = enrollments.Any(e =>
+                e.CourseId == model.CourseId &&
+                e.UserId == userId);
+
+            if (already)
+            {
+                TempData["Error"] = "You are already enrolled in this course.";
+                return RedirectToAction("Index");
+            }
+
+            model.UserId = userId;
+            model.EnrollmentDate = DateTime.Now;
+            model.Status = EnrollmentStatus.NotStarted;
+            model.Progress = 0;
+            model.CompletedLessons = 0;
+
+            enrollments.Add(model);
+            TempData["Success"] = "Enrollment completed successfully.";
+            return RedirectToAction("MyCourses");
+        }
+
+
+
+    }
+}
+
+
+
+    ////////////////////////////////////
+using Microsoft.AspNetCore.Mvc;
+using TrackFinderDb.Models.TeachingModels;
+using TrackFinderDb.Models.TrackFinderDbContext;
+namespace TrackFinderDb.Controllers
+{
+    public class CourseController : Controller
+    {
+
+        private readonly AppDbContext _context;
+        public CourseController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            var courses = _context.Courses.ToList();
+            return View(courses);
+        }
+
+        public IActionResult Details(Guid id)
+        {
+            var item = _context.Courses.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return View(item);
+
+
+        }
+
+
+        public IActionResult MyCourses()
+        {
+            Guid userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            var myCourses = _context.Courses
+                .Where(c => _context.Enrollments.Any(e =>
+                    e.CourseId == c.Id && e.UserId == userId))
+                .ToList();
+
+            return View(myCourses);
+        }
+
+        [HttpGet]
+        public IActionResult EnrollmentForm(Guid id)
+        {
+            var course = _context.Courses.FirstOrDefault(c => c.Id == id);
+
+            if (course == null)
+                return NotFound();
+
+            var enrollment = new Enrollment
+            {
+                CourseId = id
+            };
+
+            return View(enrollment);
+        }
+
+
+        public IActionResult EnrollCourse(Guid courseId)
+        {
+            var enrollment = new Enrollment
+            {
+                CourseId = courseId
+            };
+
+            return View("EnrollmentForm", enrollment);
+        }
+
+        [HttpPost]
+        public IActionResult EnrollCourse(Enrollment model)
+        {
+            Guid userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            var already = _context.Enrollments.Any(e =>
+                e.CourseId == model.CourseId &&
+                e.UserId == userId);
+
+            if (already)
+            {
+                TempData["Error"] = "You are already enrolled in this course.";
+                return RedirectToAction("Index");
+            }
+
+            model.UserId = userId;
+            model.EnrollmentDate = DateTime.Now;
+            model.Status = EnrollmentStatus.NotStarted;
+            model.Progress = 0;
+            model.CompletedLessons = 0;
+
+            _context.Enrollments.Add(model);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Enrollment completed successfully.";
+            return RedirectToAction("MyCourses");
+        }
+
+
+
+    }
+}

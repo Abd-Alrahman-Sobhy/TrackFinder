@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark tf-navbar py-3">
+    <div class="container-xxl">
+        <a class="navbar-brand d-flex align-items-center gap-3" asp-controller="Home" asp-action="Index">
+            <img src="~/images/logo.png" alt="TrackFinder logo" class="navbar-logo" />
+            <span class="brand-mark">
+                <span class="brand-title">TrackFinder</span>
+                <span class="brand-subtitle">Track discovery platform</span>
+            </span>
+        </a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav align-items-lg-center ms-lg-4 me-auto gap-lg-1">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Assessment" asp-action="Index">Assessment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Assessment" asp-action="History">History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </li>
+            </ul>
+
+            <div class="navbar-actions d-flex align-items-center gap-3">
+                <a class="btn btn-brand-outline rounded-pill px-4" asp-controller="Assessment" asp-action="Index">Start Assessment</a>
+
+                @if (User?.Identity?.IsAuthenticated == true)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-brand rounded-pill px-4 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end tf-dropdown">
+                            <li><span class="dropdown-item-text">Signed in</span></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><span class="dropdown-item-text">TODO: connect profile route</span></li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</nav>

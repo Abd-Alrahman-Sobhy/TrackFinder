@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Account Pending Review";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<!-- ── Header ─────────────────────────────────────────────────── -->
+<div class="auth-header">
+    <img src="~/DesignUIUX/Logo.png" alt="Track Finder Logo" class="auth-logo" />
+    <div class="auth-brand">Track Finder</div>
+    <div class="auth-tagline">CS Learning Portal</div>
+</div>
+
+<!-- ── Card ──────────────────────────────────────────────────── -->
+<div class="auth-card" style="text-align:center;">
+    <!-- Status Icon -->
+    <div style="width:72px;height:72px;background:#e5eeff;border-radius:50%;
+                display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#006191" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+        </svg>
+    </div>
+
+    <h1 style="font-size:22px;font-weight:700;color:#0b1c30;margin-bottom:12px;">
+        Application Under Review
+    </h1>
+
+    <p style="font-size:15px;color:#3f4850;line-height:1.7;margin-bottom:24px;">
+        Your email has been verified! ✓<br />
+        Your instructor account is currently being reviewed by our admin team.
+        We'll send you an email at the address you registered with once your account is approved.
+    </p>
+
+    <!-- Status steps -->
+    <div style="text-align:left;margin-bottom:28px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eeff;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#d6f0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a5c35" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span style="font-size:14px;color:#0b1c30;font-weight:500;">Account Created</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eeff;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#d6f0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a5c35" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span style="font-size:14px;color:#0b1c30;font-weight:500;">Email Verified</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eeff;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#e5eeff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006191" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span style="font-size:14px;color:#3f4850;font-weight:500;">Admin Review <span style="color:#006191;font-weight:600;">(In Progress)</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a0aab4" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span style="font-size:14px;color:#a0aab4;font-weight:500;">Account Activated</span>
+        </div>
+    </div>
+
+    <a href="/Login" class="btn-secondary">Back to Sign In</a>
+</div>

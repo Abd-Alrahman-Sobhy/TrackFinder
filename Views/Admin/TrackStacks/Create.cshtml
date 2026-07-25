@@ -1,0 +1,171 @@
+@model TrackFinder.ViewModels.TrackStacks.CreateTrackStackViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-0">
+                Create Track Stack
+            </h2>
+
+            <small class="text-muted">
+                Add a new stack under a track
+            </small>
+        </div>
+
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0">
+                Track Stack Information
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="StackName"
+                               class="form-label fw-semibold">
+                        </label>
+
+
+                        <input asp-for="StackName"
+                               class="form-control"
+                               placeholder="Enter stack name" />
+
+
+                        <span asp-validation-for="StackName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="RelatedTrackId"
+                               class="form-label fw-semibold">
+                        </label>
+
+
+                        <select asp-for="RelatedTrackId"
+                                asp-items="Model.Tracks"
+                                class="form-select">
+
+                            <option value="">
+                                -- Select Track --
+                            </option>
+
+                        </select>
+
+
+                        <span asp-validation-for="RelatedTrackId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-12 mb-3">
+
+
+                        <label asp-for="StackDescription"
+                               class="form-label fw-semibold">
+                        </label>
+
+
+                        <textarea asp-for="StackDescription"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Enter stack description">
+                        </textarea>
+
+
+                        <span asp-validation-for="StackDescription"
+                              class="text-danger">
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="d-flex justify-content-end gap-2">
+
+
+                    <a asp-action="Index"
+                       class="btn btn-light">
+
+                        Cancel
+
+                    </a>
+
+
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Create Stack
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

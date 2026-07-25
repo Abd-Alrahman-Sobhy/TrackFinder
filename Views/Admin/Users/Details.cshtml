@@ -1,0 +1,255 @@
+@model TrackFinder.ViewModels.Users.UserDetailsViewModel
+@using System.Security.Claims
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isCurrentUser = currentUserId == Model.Id.ToString();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold mb-1">
+            @Model.FirstName @Model.LastName
+        </h2>
+
+        <span class="text-muted">
+            @("@")@Model.Username
+        </span>
+    </div>
+
+    <div>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary me-2">
+            <i class="bi bi-pencil-square"></i>
+            Edit
+        </a>
+
+        @if (!isCurrentUser)
+        {
+            <a asp-action="Delete"
+               asp-route-id="@Model.Id"
+               class="btn btn-outline-danger">
+                <i class="bi bi-trash"></i>
+                Delete
+            </a>
+        }
+        else
+        {
+            <button class="btn btn-outline-secondary"
+                    disabled
+                    title="You cannot delete your own account">
+                <i class="bi bi-shield-lock"></i>
+                Delete Disabled
+            </button>
+        }
+
+    </div>
+
+</div>
+
+<div class="row g-4">
+
+    <!-- Profile Card -->
+    <div class="col-lg-4">
+
+        <div class="card shadow border-0 rounded-4">
+
+            <div class="card-body text-center p-4">
+
+                @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+                {
+                    <img src="@Model.ProfilePictureUrl"
+                         class="rounded-circle shadow mb-3"
+                         style="width:150px;height:150px;object-fit:cover;" />
+                }
+                else
+                {
+                    <img src="https://ui-avatars.com/api/?name=@Model.FirstName+@Model.LastName&background=4f46e5&color=fff&size=256"
+                         class="rounded-circle shadow mb-3"
+                         style="width:150px;height:150px;" />
+                }
+
+                <h4 class="fw-bold mb-1">
+                    @Model.FirstName @Model.LastName
+                </h4>
+
+                <p class="text-muted mb-3">
+                    @("@")@Model.Username
+                </p>
+
+                <span class="badge bg-primary px-3 py-2">
+                    @Model.Role
+                </span>
+
+                <hr />
+
+                <div class="row text-center">
+
+                    <div class="col-6">
+
+                        <small class="text-muted d-block mb-1">
+                            Email Verified
+                        </small>
+
+                        @if (Model.EmailVerified)
+                        {
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle"></i>
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-x-circle"></i>
+                                No
+                            </span>
+                        }
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <small class="text-muted d-block mb-1">
+                            Account Status
+                        </small>
+
+                        @if (Model.IsBanned)
+                        {
+                            <span class="badge bg-danger">
+                                Banned
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Details Card -->
+    <div class="col-lg-8">
+
+        <div class="card shadow border-0 rounded-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-0">
+                    Personal Information
+                </h5>
+
+            </div>
+
+            <div class="card-body px-4">
+
+                <div class="row gy-4">
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Email
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Email
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Birthdate
+                        </label>
+
+                        <div class="fw-semibold">
+                            @(Model.Birthdate == default
+                                                        ? "-"
+                                                        : Model.Birthdate.ToString("dd MMM yyyy"))
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Gender
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Gender
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Role
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Role
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label class="text-muted small">
+                            Bio
+                        </label>
+
+                        <div class="border rounded-3 p-3 bg-light">
+
+                            @if (string.IsNullOrWhiteSpace(Model.Bio))
+                            {
+                                <span class="text-muted">
+                                    No bio available.
+                                </span>
+                            }
+                            else
+                            {
+                                @Model.Bio
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Account Created
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.CreatedAt.ToString("dd MMM yyyy")
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

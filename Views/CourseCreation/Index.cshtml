@@ -1,0 +1,153 @@
+@using TrackFinder.Models.CourseModels
+@model IEnumerable<TrackFinder.Models.CourseModels.Course>
+
+@{
+    ViewData["Title"] = "My Courses";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var courses = Model.ToList();
+    var totalRevenue = courses.Sum(c => c.Price);
+    var avgRating = courses.Any() ? courses.Average(c => c.Rating) : 0;
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><span>Instructor Portal</span><span>›</span><span>Courses</span></div>
+        <h1 class="page-title">My Courses</h1>
+        <p class="page-sub">Manage and publish your courses from one place.</p>
+    </div>
+    <a asp-controller="CourseCreation" asp-action="Create" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+        </svg>
+        New Course
+    </a>
+</div>
+
+<!-- Stats Strip -->
+<div class="stats-strip">
+    <div class="stat-card c-accent">
+        <div class="stat-label">Total Courses</div>
+        <div class="stat-value">@courses.Count</div>
+        <div class="stat-sub">Published content</div>
+    </div>
+    <div class="stat-card c-success">
+        <div class="stat-label">Revenue Potential</div>
+        <div class="stat-value">$@totalRevenue.ToString("N0")</div>
+        <div class="stat-sub">Combined list prices</div>
+    </div>
+    <div class="stat-card c-warning">
+        <div class="stat-label">Avg. Rating</div>
+        <div class="stat-value">@avgRating.ToString("F1")</div>
+        <div class="stat-sub">Out of 5.0</div>
+    </div>
+    <div class="stat-card c-info">
+        <div class="stat-label">Total Lessons</div>
+        <div class="stat-value">@courses.Sum(c => c.Lessons?.Count ?? 0)</div>
+        <div class="stat-sub">Across all courses</div>
+    </div>
+</div>
+
+@if (!courses.Any())
+{
+    <div class="table-wrapper">
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h3>No courses yet</h3>
+            <p>Start building your first course and share your knowledge with the world.</p>
+            <a asp-controller="CourseCreation" asp-action="Create" class="btn btn-primary">Create Your First Course</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Level</th>
+                    <th>Language</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Rating</th>
+                    <th>Lessons</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var course in courses)
+                {
+                    var levelBadge = course.Level switch
+                    {
+                        Level.Beginner => "badge-green",
+                        Level.Intermediate => "badge-amber",
+                        Level.Advanced => "badge-red",
+                        _ => "badge-slate"
+                    };
+
+                    <tr>
+                        <td>
+                            <div class="course-cell">
+                                @if (!string.IsNullOrWhiteSpace(course.ImageUrl))
+                                {
+                                    <img src="@course.ImageUrl" alt="@course.Name" class="thumb" />
+                                }
+                                else
+                                {
+                                    <div class="thumb-placeholder">No Image</div>
+                                }
+                                <div>
+                                    <div class="course-name">@course.Name</div>
+                                    @if (!string.IsNullOrWhiteSpace(course.Description))
+                                    {
+                                        <div class="course-desc">@course.Description</div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge @levelBadge">@course.Level</span></td>
+                        <td><span class="badge badge-sky">@course.Language</span></td>
+                        <td>
+                            @if (course.Duration != null)
+                            {
+                                <span class="duration-pill">@course.Duration.Value @course.Duration.DurationIn</span>
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--text-muted)">—</span>
+                            }
+                        </td>
+                        <td style="font-weight:700;">$@course.Price.ToString("N2")</td>
+                        <td>
+                            @if (course.Discount.HasValue && course.Discount > 0)
+                            {
+                                <span class="badge badge-amber">@course.Discount%</span>
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--text-muted);font-size:13px;">None</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="stars">★</span>
+                            <span style="font-weight:700;font-size:14px;margin-left:4px;">@course.Rating.ToString("F1")</span>
+                        </td>
+                        <td><span class="badge badge-purple">@(course.Lessons?.Count ?? 0)</span></td>
+                        <td>
+                            <div class="action-row">
+                                <a asp-controller="CourseCreation" asp-action="Details" asp-route-id="@course.Id" class="btn btn-info btn-sm">View</a>
+                                <a asp-controller="CourseCreation" asp-action="Edit" asp-route-id="@course.Id" class="btn btn-success btn-sm">Edit</a>
+                                <a asp-controller="CourseCreation" asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Delete \'@course.Name\'? This cannot be undone.')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,48 @@
+﻿@model TrackFinder.Models.AchievementModels.Certificate
+@{
+    ViewData["Title"] = "Add Certificate";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><a asp-action="Certificates">Certificates</a><span>›</span><span>Add</span></div>
+        <h1 class="page-title">Add New Certificate</h1>
+        <p class="page-sub">Create a formal recognition document for mastery paths.</p>
+    </div>
+</div>
+
+<div class="card" style="max-width:650px;">
+    <form asp-action="CreateCertificate" method="post">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label asp-for="Title">Certificate Title <span class="req">*</span></label>
+                <input asp-for="Title" class="form-control" placeholder="e.g. Advanced Data Structures & Algorithms" />
+                <span asp-validation-for="Title" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Mastered complex algorithmic complexity, graph theory, and dynamic programming..."></textarea>
+                <span asp-validation-for="Description" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="CertificateUrl">Certificate Template URL</label>
+                <input asp-for="CertificateUrl" class="form-control" placeholder="/certificates/templates/advanced-ds.pdf" />
+                <span asp-validation-for="CertificateUrl" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="UnlockRequirement">Unlock Requirement</label>
+                <input asp-for="UnlockRequirement" class="form-control" placeholder="Finish Machine Learning Path to unlock" />
+                <span asp-validation-for="UnlockRequirement" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Certificate</button>
+            <a asp-action="Certificates" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>

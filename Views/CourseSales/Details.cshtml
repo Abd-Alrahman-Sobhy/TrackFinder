@@ -1,0 +1,222 @@
+@using TrackFinder.Models.CourseModels
+@model Course
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var isEnrolled = ViewBag.IsEnrolled == true;
+    var lessonsCount = Model.Lessons?.Count ?? 0;
+    var materialsCount = Model.Lessons?.Sum(l => l.Materials?.Count ?? 0) ?? 0;
+}
+
+<style>
+    .cd-header {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 36px 32px;
+        color: white;
+        margin-bottom: 28px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cd-header::before {
+        content: '';
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        top: -100px;
+        right: -80px;
+    }
+
+    .cd-header::after {
+        content: '';
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        bottom: -60px;
+        left: 10%;
+    }
+
+    .cd-header .icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .cd-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 8px;
+    }
+
+    .cd-header .price-lg {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+
+    .cd-body {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .cd-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 28px 24px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 20px;
+    }
+
+    .cd-section h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cd-section h2 svg {
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    .cd-section p {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .cd-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .cd-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border-radius: var(--radius-sm);
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+    }
+
+    .cd-btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .cd-btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 97, 145, 0.25);
+    }
+
+    .cd-btn-secondary {
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    .cd-btn-secondary:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 640px) {
+        .cd-header {
+            padding: 28px 20px;
+        }
+    }
+</style>
+
+<div class="cd-header">
+    <div class="icon">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Name" style="width:100%;height:100%;object-fit:cover;border-radius:16px;" />
+        }
+        else
+        {
+            <span>💻</span>
+        }
+    </div>
+    <h1>@Model.Name</h1>
+    <div class="price-lg">$@Model.Price.ToString("N2")</div>
+</div>
+
+<div class="cd-body">
+    <div class="cd-section">
+        <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+            Course Description
+        </h2>
+        <p>@Model.Description</p>
+        <div style="display:flex;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+            <div style="text-align:center;">
+                <div style="font-size:20px;font-weight:700;color:var(--primary);">@lessonsCount</div>
+                <div style="font-size:12px;color:var(--text-muted);">Lessons</div>
+            </div>
+            <div style="text-align:center;">
+                <div style="font-size:20px;font-weight:700;color:var(--primary);">@materialsCount</div>
+                <div style="font-size:12px;color:var(--text-muted);">Materials</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cd-actions">
+        @if (isEnrolled)
+        {
+            <a asp-action="Index" asp-controller="Course" asp-route-id="@Model.Id" class="cd-btn cd-btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+                View Course
+            </a>
+        }
+        else
+        {
+            <a asp-action="EnrollCourse" asp-route-courseId="@Model.Id" class="cd-btn cd-btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Enroll Now
+            </a>
+        }
+        <a asp-action="Index" class="cd-btn cd-btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back to Courses
+        </a>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="info-card p-4 p-lg-5 rounded-4">
+    <div class="section-kicker mb-3">Unexpected</div>
+    <h1 class="h3 text-brand-ink mb-3">An error occurred while processing your request.</h1>
+
+    @if (Model.ShowRequestId)
+    {
+        <div class="alert alert-brand mb-4">
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </div>
+    }
+
+    <p class="text-brand-muted mb-0">
+        If this is a production deployment, keep the error surface minimal and check the server logs for the underlying exception details.
+    </p>
+</section>

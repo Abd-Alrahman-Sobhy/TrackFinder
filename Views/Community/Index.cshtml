@@ -1,0 +1,297 @@
+@model TrackFinder.ViewModels.Community_ViewModels.CommunityFeedVM
+@using TrackFinder.Models.UserModels
+
+@{
+    ViewData["Title"] = "Community";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="community-page">
+    <main class="community-main">
+        @if (TempData["CommunityMessage"] is string message)
+        {
+            <div class="community-alert">@message</div>
+        }
+
+        <section class="composer-card" aria-label="Create a community post">
+            <div class="avatar">@Initials("Current", "User")</div>
+            <form asp-action="CreatePost" method="post" class="composer-form">
+                @Html.AntiForgeryToken()
+                <textarea style="width:85%" asp-for="NewPost.Content" name="Content" placeholder="Share a coding breakthrough or ask a question..."></textarea>
+                <div class="composer-tools">
+                    <select asp-for="NewPost.GroupId" name="GroupId" asp-items="Model.CommunityOptions" aria-label="Community"></select>
+                    <input asp-for="NewPost.ImageUrl" name="ImageUrl" placeholder="Image URL" />
+                    <button type="submit" disabled="@(Model.CommunityOptions.Count == 0)">Post</button>
+                </div>
+            </form>
+        </section>
+
+        <nav class="feed-tabs" aria-label="Community feed filters">
+            <a class="@(Model.ActiveFilter == "all" ? "active" : null)" asp-action="Index" asp-route-filter="all">All Posts</a>
+            <a class="@(Model.ActiveFilter == "instructors" ? "active" : null)" asp-action="Index" asp-route-filter="instructors">Instructors</a>
+            <a class="@(Model.ActiveFilter == "study-groups" ? "active" : null)" asp-action="Index" asp-route-filter="study-groups">Study Groups</a>
+            <a class="@(Model.ActiveFilter == "course-specific" ? "active" : null)" asp-action="Index" asp-route-filter="course-specific" asp-route-communityId="@Model.SelectedCommunityId">Course Specific</a>
+        </nav>
+
+        <section class="post-feed" aria-label="Community posts">
+            @if (!Model.Posts.Any())
+            {
+                <article class="post-card empty-state">
+                    <h2>No posts yet</h2>
+                    <p>Start the first discussion for this community.</p>
+                </article>
+            }
+            else
+            {
+                @foreach (var post in Model.Posts)
+                {
+                    <article class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <div class="avatar large">@Initials(post.Author.FirstName, post.Author.LastName)</div>
+                                <div>
+                                    <div class="author-line">
+                                        <strong>@FullName(post.Author)</strong>
+                                        @if (post.Author.Role == UserRole.Instructor)
+                                        {
+                                            <span class="role-pill">Instructor</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="role-pill">CS Student</span>
+                                        }
+                                        <span>@RelativeTime(post.CreatedAt)</span>
+                                    </div>
+                                    <small>@post.Community.Name</small>
+                                </div>
+                            </div>
+                            <div class="dropdown post-menu ">
+                                <button type="button" class="post-menu__trigger" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Post options">
+                                    <span class="fa-solid fa-ellipsis-h" aria-hidden="true"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end post-menu__dropdown">
+                                    @if (post.CanManage)
+                                    {
+                                        <a class="dropdown-item" asp-action="EditPost" asp-route-id="@post.Id">
+                                            <span class="fa-solid fa-pen" aria-hidden="true"></span> Edit
+                                        </a>
+                                        <form asp-action="DeletePost" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@post.Id" />
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <span class="fa-solid fa-trash" aria-hidden="true"></span> Delete
+                                            </button>
+                                        </form>
+                                        <div class="dropdown-divider"></div>
+                                    }
+                                    <span class="dropdown-item-text" style="font-size:12px;font-weight:600;color:var(--text-muted);padding:6px 16px;">Report as…</span>
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault();reportPost('@post.Id','Spam')"><span class="fa-solid fa-flag"></span> Spam</a>
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault();reportPost('@post.Id','Harassment')"><span class="fa-solid fa-flag"></span> Harassment</a>
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault();reportPost('@post.Id','OffensiveContent')"><span class="fa-solid fa-flag"></span> Offensive Content</a>
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault();reportPost('@post.Id','FakeInformation')"><span class="fa-solid fa-flag"></span> Fake Information</a>
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault();reportPost('@post.Id','Other')"><span class="fa-solid fa-flag"></span> Other</a>
+                                </div>
+                                <form id="report-form-@post.Id" asp-action="Report" method="post" style="display:none;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@post.Id" />
+                                    <input type="hidden" name="reason" id="report-reason-@post.Id" value="Other" />
+                                </form>
+                            </div>
+                        </div>
+
+                        <p class="post-content">@post.Content</p>
+
+                        @if (!string.IsNullOrWhiteSpace(post.ImageUrl))
+                        {
+                            <img class="post-image" src="@post.ImageUrl" alt="Community post attachment" />
+                        }
+
+                        @if (post.Tags.Any())
+                        {
+                            <div class="tag-row">
+                                @foreach (var tag in post.Tags)
+                                {
+                                    <span>#@tag</span>
+                                }
+                            </div>
+                        }
+
+                        @if (post.Comments.Any())
+                        {
+                            <div class="comment-preview">
+                                @foreach (var comment in post.Comments)
+                                {
+                                    <div class="comment-item">
+                                        <div class="avatar small">@Initials(comment.User?.FirstName, comment.User?.LastName)</div>
+                                        <div>
+                                            <strong>@FullName(comment.User)</strong>
+                                            <span>@RelativeTime(comment.CreatedAt)</span>
+                                            <p>@comment.Content</p>
+                                            <button type="button" class="reply-btn" data-reply-to="@comment.Id" style="background:none;border:none;color:var(--primary);font-size:12px;font-weight:600;cursor:pointer;padding:2px 0;">Reply</button>
+                                        </div>
+                                        @if (comment.CanManage)
+                                        {
+                                            <form asp-action="DeleteComment" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@comment.Id" />
+                                                <button type="submit" class="delete-comment-btn">Delete</button>
+                                            </form>
+                                        }
+                                    </div>
+                                    <form asp-action="AddComment" method="post" class="comment-form is-collapsed" id="reply-form-@comment.Id" style="margin-left:44px;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="PostId" value="@post.Id" />
+                                        <input type="hidden" name="ParentCommentId" value="@comment.Id" />
+                                        <input name="Content" placeholder="Write a reply..." />
+                                        <button type="submit">Reply</button>
+                                    </form>
+                                }
+                            </div>
+                        }
+
+                        <form asp-action="AddComment" method="post" class="comment-form is-collapsed" id="comment-form-@post.Id">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="PostId" value="@post.Id" />
+                            <input name="Content" placeholder="Add a helpful reply..." />
+                            <button type="submit">Comment</button>
+                        </form>
+
+                        <div class="post-actions">
+                            <button type="button" class="post-stat" data-toggle-comment="comment-form-@post.Id" aria-expanded="false" aria-controls="comment-form-@post.Id">
+                                <span class="fa-regular fa-comment" aria-hidden="true"></span> Comments <strong>@post.Comments.Count</strong>
+                            </button>
+
+                            @* <span class="post-stat"><span class="fa-regular fa-heart" aria-hidden="true"></span> Likes <strong>@Math.Max(0, post.PostPriority)</strong></span> *@
+                            <span class="post-stat"><span class="fa-solid fa-flag" aria-hidden="true"></span> Reports <strong>@post.ReportsCount</strong></span>
+                            @* <button type="button" class="post-stat" data-share-post="@post.Id">
+                                <span class="fa-solid fa-share-nodes" aria-hidden="true"></span> Share
+                            </button> *@
+                        </div>
+                    </article>
+                }
+            }
+        </section>
+    </main>
+
+    <aside class="community-rail">
+        <section class="rail-card">
+            <div class="rail-title">
+                <h2>Trending Topics</h2>
+                <span class="fa-solid fa-chart-line" aria-hidden="true"></span>
+            </div>
+            @foreach (var topic in Model.TrendingTopics)
+            {
+                <div class="topic-item">
+                    <strong>#@topic.Name</strong>
+                    <span>@topic.PostsCount posts this week</span>
+                </div>
+            }
+            <a class="outline-button" asp-action="Index">Explore All Topics</a>
+        </section>
+
+        <section class="rail-card">
+            <h2>Active Groups</h2>
+            @if (!Model.Communities.Any())
+            {
+                <p class="muted">No communities found in the database.</p>
+            }
+            else
+            {
+                @foreach (var community in Model.Communities.Take(4))
+                {
+                    <div class="group-item">
+                        <div class="group-icon"><span class="fa-solid fa-users" aria-hidden="true"></span></div>
+                        <div>
+                            <strong>@community.Name</strong>
+                            <span>@community.MembersCount members - @community.OnlineCount online</span>
+                        </div>
+                        @if (community.IsJoined)
+                        {
+                            <span class="joined-label">Joined</span>
+                        }
+                        else
+                        {
+                            <form asp-action="Join" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@community.Id" />
+                                <button type="submit">Join</button>
+                            </form>
+                        }
+                    </div>
+                }
+            }
+        </section>
+
+        <section class="mentor-card">
+            <h2>Mentor Network</h2>
+            <p>Get direct feedback on your code from industry experts and top-performing alumni.</p>
+            <a href="#" >Apply for Mentorship</a>
+        </section>
+    </aside>
+</div>
+
+
+@section Scripts {
+    <script>
+        (function () {
+            // ── Toggle comment form ────────────────────────────
+            document.querySelectorAll('[data-toggle-comment]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var formId = this.getAttribute('data-toggle-comment');
+                    var form = document.getElementById(formId);
+                    if (form) {
+                        var expanded = this.getAttribute('aria-expanded') === 'true';
+                        form.classList.toggle('is-collapsed');
+                        this.setAttribute('aria-expanded', !expanded);
+                    }
+                });
+            });
+
+            // ── Reply: show reply form inline ──────────────────
+            document.querySelectorAll('[data-reply-to]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var commentId = this.getAttribute('data-reply-to');
+                    var replyForm = document.getElementById('reply-form-' + commentId);
+                    if (replyForm) {
+                        replyForm.classList.toggle('is-collapsed');
+                    }
+                });
+            });
+        })();
+
+        // ── Report post with reason ───────────────────────────
+        function reportPost(postId, reason) {
+            document.getElementById('report-reason-' + postId).value = reason;
+            document.getElementById('report-form-' + postId).submit();
+        }
+    </script>
+}
+
+@functions {
+    private static string FullName(User? user)
+    {
+        if (user is null)
+        {
+            return "Community Member";
+        }
+
+        return string.Join(" ", new[] { user.FirstName, user.LastName }.Where(part => !string.IsNullOrWhiteSpace(part)));
+    }
+
+    private static string Initials(string? firstName, string? lastName)
+    {
+        var first = string.IsNullOrWhiteSpace(firstName) ? "C" : firstName.Trim()[0].ToString();
+        var last = string.IsNullOrWhiteSpace(lastName) ? string.Empty : lastName.Trim()[0].ToString();
+        return (first + last).ToUpperInvariant();
+    }
+
+    private static string RelativeTime(DateTime createdAt)
+    {
+        var elapsed = DateTime.UtcNow - createdAt.ToUniversalTime();
+        if (elapsed.TotalMinutes < 1) return "just now";
+        if (elapsed.TotalHours < 1) return $"{Math.Max(1, (int)elapsed.TotalMinutes)}m ago";
+        if (elapsed.TotalDays < 1) return $"{Math.Max(1, (int)elapsed.TotalHours)}h ago";
+        if (elapsed.TotalDays < 7) return $"{Math.Max(1, (int)elapsed.TotalDays)}d ago";
+        return createdAt.ToString("MMM d");
+    }
+}

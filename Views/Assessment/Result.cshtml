@@ -1,0 +1,505 @@
+@model TrackFinder.ViewModels.Assessment_ViewModels.AssessmentResultVM
+
+@{
+    ViewData["Title"] = "Assessment Results";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var topTracks = Model.Tracks?.Take(3).ToList() ?? new List<TrackFinder.ViewModels.Assessment_ViewModels.AssessmentResultTracksVM>();
+}
+
+<style>
+    .result-hero {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 40px 36px;
+        color: white;
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .result-hero::before {
+        content: '';
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        top: -80px;
+        right: -60px;
+    }
+
+    .result-hero h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 6px;
+    }
+
+    .result-hero p {
+        font-size: 14px;
+        opacity: 0.8;
+        margin: 0;
+        max-width: 520px;
+    }
+
+    .result-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .result-date {
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .result-date .label {
+        font-size: 12px;
+        opacity: 0.6;
+        margin-bottom: 2px;
+    }
+
+    .result-date .value {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-title svg {
+        color: var(--primary);
+    }
+
+    /* ── Track Cards Grid ─────────────────────────────────── */
+    .tracks-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 32px;
+        align-items: start;
+    }
+
+    .track-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .track-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .track-card.rank-1 {
+        border-color: rgba(245, 158, 11, 0.3);
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08);
+    }
+
+    .track-card.rank-1:hover {
+        box-shadow: 0 8px 28px rgba(245, 158, 11, 0.12);
+    }
+
+    .track-card-body {
+        padding: 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .track-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .rank-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+        background: var(--bg);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+    }
+
+    .track-card.rank-1 .rank-chip {
+        background: rgba(245, 158, 11, 0.1);
+        color: #b45309;
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .score-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 14px;
+        font-weight: 700;
+        background: rgba(0, 97, 145, 0.08);
+        color: var(--primary);
+        border: 1px solid rgba(0, 97, 145, 0.15);
+    }
+
+    .track-card.rank-1 .score-chip {
+        background: rgba(245, 158, 11, 0.12);
+        color: #b45309;
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .track-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 12px;
+    }
+
+    .track-card.rank-1 .track-name {
+        font-size: 19px;
+    }
+
+    .match-bar {
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 14px;
+    }
+
+    .match-bar .fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        transition: width 0.6s ease;
+    }
+
+    .track-card.rank-1 .match-bar .fill {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .salary-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        color: #065f46;
+        background: #d1fae5;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        margin-bottom: 12px;
+    }
+
+    .track-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        flex: 1;
+    }
+
+    .stacks-collapse {
+        margin-bottom: 8px;
+    }
+
+    .stacks-collapse h6 {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 10px;
+    }
+
+    .stack-link {
+        display: block;
+        padding: 8px 14px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        text-decoration: none;
+        transition: var(--transition);
+        margin-bottom: 6px;
+    }
+
+    .stack-link:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(0, 97, 145, 0.04);
+    }
+
+    .track-card-footer {
+        padding: 14px 24px;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .card-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        flex: 1;
+    }
+
+    .card-btn-outline {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    .card-btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .card-btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .card-btn-primary:hover {
+        background: var(--primary-dark);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+
+    .empty-state .icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @@media (max-width: 900px) {
+        .tracks-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .result-hero {
+            flex-direction: column;
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .result-hero p {
+            max-width: 100%;
+        }
+
+        .result-date {
+            text-align: center;
+        }
+    }
+
+    @@media (min-width: 901px) and (max-width: 1200px) {
+        .tracks-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="result-hero">
+    <div>
+        <div class="result-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Assessment Complete
+        </div>
+        <h1>Your Career Track Match Results</h1>
+        <p>We analyzed your responses and matched you against top engineering roles. Here are your top 3 recommended paths.</p>
+    </div>
+    <div class="result-date">
+        <div class="label">Assessment Date</div>
+        <div class="value">@Model.at.ToString("dd MMM yyyy, HH:mm")</div>
+    </div>
+</div>
+
+@if (!topTracks.Any())
+{
+    <div class="empty-state">
+        <div class="icon">🔍</div>
+        <h3>No Matches Found</h3>
+        <p>We couldn't generate track recommendations. Please try retaking the assessment.</p>
+        <a asp-action="Index" asp-controller="Assessment" class="card-btn card-btn-primary" style="display:inline-flex;padding:10px 28px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Take Assessment
+        </a>
+    </div>
+}
+else
+{
+    <div class="section-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Top 3 Recommended Tracks
+    </div>
+
+    <div class="tracks-grid">
+        @for (int i = 0; i < topTracks.Count; i++)
+        {
+            var track = topTracks[i];
+            var collapseId = $"stacks_{track.TrackId}";
+
+            <div class="track-card @(i == 0 ? "rank-1" : "")">
+                <div class="track-card-body">
+                    <div class="track-card-top">
+                        <span class="rank-chip">
+                            @if (i == 0)
+                            {
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            }
+                            Rank #@(i + 1)
+                        </span>
+                        <span class="score-chip">@track.SimilarityScore% Match</span>
+                    </div>
+
+                    <div class="track-name">@track.TrackName</div>
+
+                    <div class="match-bar">
+                        <div class="fill" style="width: @track.SimilarityScore%;" role="progressbar" aria-valuenow="@track.SimilarityScore" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(track.AverageSalary))
+                    {
+                        <div class="salary-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            Salary: @track.AverageSalary
+                        </div>
+                    }
+
+                    <p class="track-desc">@track.TrackDescription</p>
+
+                    <div class="collapse stacks-collapse" id="@collapseId">
+                        <h6>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            Tech Stacks
+                        </h6>
+                        @if (track.Stacks != null && track.Stacks.Any())
+                        {
+                            foreach (var stack in track.Stacks)
+                            {
+                                <a href="/Assessment/Stack/@stack.Id" class="stack-link">@stack.StackName</a>
+                            }
+                        }
+                        else
+                        {
+                            <p style="font-size:13px;color:var(--text-muted);font-style:italic;">No stacks available for this track.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="track-card-footer">
+                    <a href="/Assessment/Skills/@track.TrackId" class="card-btn card-btn-outline">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        Skills
+                    </a>
+
+                    @if (!string.IsNullOrWhiteSpace(track.RoadMapUrl))
+                    {
+                        <a href="@track.RoadMapUrl" target="_blank" rel="noopener noreferrer" class="card-btn card-btn-outline">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                                <line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>
+                            </svg>
+                            Roadmap
+                        </a>
+                    }
+
+                    <button type="button" class="card-btn card-btn-primary" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        Stacks
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div style="text-align:center;">
+        <a asp-action="History" asp-controller="Assessment" class="card-btn card-btn-outline" style="display:inline-flex;padding:10px 28px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            View Assessment History
+        </a>
+    </div>
+}

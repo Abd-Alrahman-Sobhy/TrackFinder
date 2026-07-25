@@ -1,0 +1,160 @@
+@model TrackFinder.ViewModels.TrackStacks.TrackStackDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="container-fluid">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-0">
+                Track Stack Details
+            </h2>
+
+            <small class="text-muted">
+                View complete stack information
+            </small>
+        </div>
+
+
+        <div>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning me-2">
+
+                <i class="bi bi-pencil-square me-1"></i>
+                Edit
+
+            </a>
+
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Back
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="card shadow-sm border-0">
+
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0">
+                Stack Information
+            </h5>
+
+        </div>
+
+
+
+        <div class="card-body">
+
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="text-muted fw-semibold">
+                        Stack Name
+                    </label>
+
+                    <h5>
+                        @Model.StackName
+                    </h5>
+
+                </div>
+
+
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="text-muted fw-semibold">
+                        Related Track
+                    </label>
+
+                    <h5>
+                        @Model.RelatedTrackName
+                    </h5>
+
+                </div>
+
+
+
+
+                <div class="col-md-12 mb-4">
+
+
+                    <label class="text-muted fw-semibold">
+                        Description
+                    </label>
+
+
+                    @if (string.IsNullOrWhiteSpace(Model.StackDescription))
+                    {
+                        <p class="text-muted">
+                            No description available.
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            @Model.StackDescription
+                        </p>
+                    }
+
+
+                </div>
+
+
+
+
+                <div class="col-md-6">
+
+
+                    <label class="text-muted fw-semibold">
+                        Courses Count
+                    </label>
+
+
+                    <div>
+
+                        <span class="badge bg-success fs-6">
+
+                            @Model.CoursesCount Courses
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>

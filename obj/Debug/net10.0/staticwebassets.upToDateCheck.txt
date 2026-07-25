@@ -1,0 +1,49 @@
+wwwroot\css\admin.css
+wwwroot\css\dashboard.css
+wwwroot\css\site.css
+wwwroot\favicon.ico
+wwwroot\images\logo.png
+wwwroot\js\site.js
+wwwroot\lib\bootstrap\LICENSE
+wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+wwwroot\lib\jquery-validation\LICENSE.md
+wwwroot\lib\jquery\LICENSE.txt
+wwwroot\materials\1bf21870-1a4b-4055-9cc1-858876ea0417_L1-5 merged.rar
+wwwroot\materials\c78ba873-5bb7-407f-95bb-7ceeae1e5073_Assessment.rar
+wwwroot\uploads\badge_29b28e6a-2e24-4d27-938c-4bffac5d7aaa.png
+wwwroot\uploads\badge_921aa1f7-93c1-401a-a84e-4d39ab59331b.jpg
+wwwroot\uploads\badge_c081d4c1-3f3b-4b7d-89bd-f1ada5f8a480.png
+wwwroot\uploads\badge_d86672a6-798f-4453-a51a-af8ca5afbe1c.png
+wwwroot\uploads\badge_d88091d0-e4f5-477a-8454-da9ccdb15fce.jpg
+wwwroot\uploads\certificate_19e8017b-f22d-49eb-8a93-fc7abaa70ad6.png
+wwwroot\uploads\certificate_36d5fb87-a41d-4714-abc0-b52181eeaf7b.jpeg
+wwwroot\uploads\certificate_4c9ea15c-85f5-46ea-b06b-854e2c0694ef.jpeg
+wwwroot\uploads\certificate_9d41c594-c9bc-4457-8390-837322330818.png
+wwwroot\uploads\course_1acad932-9bd3-4090-b15f-8a13dd02ce3e.png
+wwwroot\uploads\course_287cc5c6-feaa-4508-b0c9-6890fdb0edab.png
+wwwroot\uploads\course_2f07fe63-d72c-4e14-810e-df1b992d0379.png
+wwwroot\uploads\course_528ec1c6-03c2-4ac7-ad6f-bbd4b37a2db4.png
+wwwroot\uploads\course_783add8b-08f3-417c-a117-71165ac72a66.png
+wwwroot\uploads\course_84d60d36-16d2-4f90-a457-ad42be2eae0e.png
+wwwroot\uploads\course_949df706-d675-4f91-a0e4-f78dd3c3f264.png
+wwwroot\uploads\course_a2965622-a5ef-4ce1-a4f3-d54a5d37ca40.png
+wwwroot\uploads\course_ed721f04-b06a-48c9-b4b4-583b705c9798.png
+wwwroot\uploads\course_f5a454f6-7d5f-4a4c-8e95-b45a580b8f36.png
+wwwroot\uploads\course_f7592d9a-bb4f-46a9-971b-89ab4dadc135.png
+wwwroot\uploads\course_f780893f-0170-4432-9fff-d87c1f8139ff.png
+wwwroot\uploads\InstructorsCVs\6e835215-042f-4ce7-9f3e-390b3e359621.pdf
+wwwroot\uploads\InstructorsCVs\c8ccb03b-2dec-4ec5-8ae0-24b9f6030666.pdf
+wwwroot\uploads\InstructorsCVs\d9dea486-7239-4d00-b210-823035dcaede.pdf
+wwwroot\uploads\InstructorsCVs\e4980c3f-1f4d-4baf-93b9-9256fefcffd1.pdf
+wwwroot\uploads\profiles\73699f9e-55c3-4e42-a3cb-ca396d9b704f.png
+wwwroot\uploads\profiles\7e6e88c8-834f-44e2-9f22-cf6fb1f2d588.jpeg
+wwwroot\uploads\profiles\806e83a9-1b2b-4961-b021-dc0f570dfa8c.jpeg
+wwwroot\uploads\profiles\eb10ec5a-2e11-4b5f-b483-7036de4620ba.png
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\lib\jquery\LICENSE.txt
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\lib\jquery-validation\LICENSE.md
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\js\site.js
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\favicon.ico
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\css\site.css
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\css\dashboard.css
+D:\Web Projects\TrackFinderMain\TrackFinder.github.io\TrackFinder\wwwroot\css\admin.css

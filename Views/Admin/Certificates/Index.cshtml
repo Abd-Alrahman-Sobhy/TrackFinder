@@ -1,0 +1,177 @@
+@model IEnumerable<TrackFinder.ViewModels.Achievements.CertificateListViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Certificates
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage and review all certificates
+            </p>
+        </div>
+
+
+        <a asp-controller="Certificates"
+           asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            New Certificate
+
+        </a>
+
+    </div>
+
+
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            <i class="bi bi-info-circle me-2"></i>
+            No certificates found.
+        </div>
+    }
+    else
+    {
+
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+
+                <div class="col-xl-4 col-md-6">
+
+
+                    <div class="card border-0 shadow-sm h-100">
+
+
+                        <div class="card-body d-flex flex-column">
+
+
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+
+                                <div class="bg-primary bg-opacity-10 rounded p-3">
+
+                                    <i class="bi bi-award fs-3 text-primary"></i>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    Certificate
+                                </span>
+
+
+                            </div>
+
+
+
+                            <h5 class="fw-bold mb-2">
+                                @item.Title
+                            </h5>
+
+
+                            <p class="text-muted flex-grow-1">
+
+                                @(string.IsNullOrWhiteSpace(item.Description)
+                                                        ? "No description available."
+                                                        : item.Description.Length > 100
+                                                        ? item.Description.Substring(0, 100) + "..."
+                                                        : item.Description)
+
+                            </p>
+
+
+
+                            <div class="border-top pt-3 mt-3">
+
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+
+                                    @if (!string.IsNullOrEmpty(item.CertificateUrl))
+                                    {
+
+                                        <a href="@item.CertificateUrl"
+                                           target="_blank"
+                                           class="btn btn-sm btn-outline-primary">
+
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>
+                                            Open
+
+                                        </a>
+
+                                    }
+                                    else
+                                    {
+
+                                        <span class="text-muted small">
+                                            No File
+                                        </span>
+
+                                    }
+
+
+
+                                    <div>
+
+
+                                        <a asp-controller="Certificates"
+                                           asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-warning me-1">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </a>
+
+
+                                        <a asp-controller="Certificates"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-danger">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </a>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            }
+
+        </div>
+
+    }
+
+
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

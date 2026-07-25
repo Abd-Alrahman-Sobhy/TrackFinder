@@ -1,0 +1,44 @@
+@model TrackFinder.ViewModels.Instructors.EditInstructorViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Edit Instructor</h3>
+<form asp-action="Edit" asp-controller="Instructors" method="post" asp-route-userId="@Model.UserId">
+    @Html.AntiForgeryToken()
+    <input asp-for="UserId" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="GithubLink" class="form-label"></label>
+            <input asp-for="GithubLink" class="form-control" />
+            <span asp-validation-for="GithubLink" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="LinkedInLink" class="form-label"></label>
+            <input asp-for="LinkedInLink" class="form-control" />
+            <span asp-validation-for="LinkedInLink" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Rating" class="form-label"></label>
+        <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+   
+
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Instructors">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

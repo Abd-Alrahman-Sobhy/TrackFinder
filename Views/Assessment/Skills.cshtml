@@ -1,0 +1,245 @@
+@model TrackFinder.ViewModels.Assessment_ViewModels.TrackDetailsVM
+
+@{
+    ViewData["Title"] = "Track Skills";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .skills-header {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 32px 28px;
+        color: white;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skills-header::before {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        top: -60px;
+        right: -60px;
+    }
+
+    .skills-header h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 4px;
+    }
+
+    .skills-header p {
+        font-size: 13px;
+        opacity: 0.8;
+        margin: 0;
+    }
+
+    .skills-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .count-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .skills-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .skills-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .skills-table thead th {
+        background: var(--bg);
+        padding: 14px 20px;
+        text-align: left;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .skills-table tbody td {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: top;
+    }
+
+    .skills-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .skills-table tbody tr:hover {
+        background: rgba(0, 97, 145, 0.02);
+    }
+
+    .skill-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 600;
+        background: rgba(0, 97, 145, 0.06);
+        color: var(--primary);
+        border: 1px solid rgba(0, 97, 145, 0.12);
+    }
+
+    .skill-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+    }
+
+    .empty-state .icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    @@media (max-width: 640px) {
+        .skills-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 24px 20px;
+        }
+
+        .skills-table thead {
+            display: none;
+        }
+
+        .skills-table tbody tr {
+            display: block;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skills-table tbody td {
+            display: block;
+            padding: 4px 0;
+            border: none;
+        }
+
+        .skills-table tbody td:first-child {
+            margin-bottom: 6px;
+        }
+    }
+</style>
+
+@if (Model == null)
+{
+    <div class="empty-state" style="background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);">
+        <div class="icon">⚠️</div>
+        <h3>Track Not Found</h3>
+        <p>We couldn't retrieve the skills catalogue for this track.</p>
+    </div>
+}
+else
+{
+    <div class="skills-header">
+        <div>
+            <div class="skills-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                Skills Catalogue
+            </div>
+            <h1>@Model.TrackName Skills</h1>
+            <p>Essential skills you will gain and develop in the @Model.TrackName track.</p>
+        </div>
+        <div class="count-chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            </svg>
+            @(Model.GainedSkills?.Count ?? 0) Skills
+        </div>
+    </div>
+
+    <div class="skills-card">
+        @if (Model.GainedSkills == null || !Model.GainedSkills.Any())
+        {
+            <div class="empty-state">
+                <div class="icon">📋</div>
+                <h3>No skills registered</h3>
+                <p>No skills have been registered for this track yet.</p>
+            </div>
+        }
+        else
+        {
+            <table class="skills-table">
+                <thead>
+                    <tr>
+                        <th style="width:25%;">Skill</th>
+                        <th style="width:75%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var skill in Model.GainedSkills)
+                    {
+                        <tr>
+                            <td><span class="skill-tag">@skill.Name</span></td>
+                            <td class="skill-desc">@skill.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}

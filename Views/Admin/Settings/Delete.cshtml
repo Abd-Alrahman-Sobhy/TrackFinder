@@ -1,0 +1,12 @@
+@model dynamic
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Delete Setting</h3>
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Key" value="@ViewBag.Key" />
+    <div class="alert alert-danger">Are you sure you want to delete this setting?</div>
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index">Cancel</a>
+</form>

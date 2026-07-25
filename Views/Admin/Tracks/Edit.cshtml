@@ -1,0 +1,35 @@
+@model TrackFinder.ViewModels.Tracks.EditTrackViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Edit Track</h3>
+<form asp-action="Edit" asp-controller="Tracks" method="post" asp-route-id="@Model.Id">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="TrackName" class="form-label"></label>
+        <input asp-for="TrackName" class="form-control" />
+        <span asp-validation-for="TrackName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrackDescription" class="form-label"></label>
+        <textarea asp-for="TrackDescription" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="TrackDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoadMapUrl" class="form-label"></label>
+        <input asp-for="RoadMapUrl" class="form-control" />
+        <span asp-validation-for="RoadMapUrl" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Tracks">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

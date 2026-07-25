@@ -1,0 +1,12 @@
+@model TrackFinder.ViewModels.Achievements.CertificateDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Delete Certificate</h3>
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div class="alert alert-danger">Are you sure you want to delete <strong>@Model.Title</strong>?</div>
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index">Cancel</a>
+</form>

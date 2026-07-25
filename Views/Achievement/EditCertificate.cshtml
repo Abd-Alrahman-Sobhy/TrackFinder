@@ -1,0 +1,50 @@
+﻿@model TrackFinder.Models.AchievementModels.Certificate
+@{
+    ViewData["Title"] = "Edit Certificate";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><a asp-action="Certificates">Certificates</a><span>›</span><span>Edit</span></div>
+        <h1 class="page-title">Edit Certificate</h1>
+        <p class="page-sub">Update certificate configuration parameters.</p>
+    </div>
+</div>
+
+<div class="card" style="max-width:650px;">
+    <form asp-action="EditCertificate" method="post">
+        <input asp-for="Id" type="hidden" />
+
+        <div class="form-grid">
+            <div class="form-group full">
+                <label asp-for="Title">Certificate Title <span class="req">*</span></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="CertificateUrl">Certificate Template URL</label>
+                <input asp-for="CertificateUrl" class="form-control" />
+                <span asp-validation-for="CertificateUrl" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group full">
+                <label asp-for="UnlockRequirement">Unlock Requirement</label>
+                <input asp-for="UnlockRequirement" class="form-control" />
+                <span asp-validation-for="UnlockRequirement" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Certificates" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>

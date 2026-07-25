@@ -1,0 +1,344 @@
+@using TrackFinder.Models.CourseModels
+@model List<Course>
+
+@{
+    ViewData["Title"] = "Our Courses";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .cs-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 36px 32px;
+        color: white;
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cs-header::before {
+        content: '';
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+        top: -90px;
+        right: -70px;
+    }
+
+    .cs-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 4px;
+    }
+
+    .cs-header p {
+        font-size: 14px;
+        opacity: 0.8;
+        margin: 0;
+        max-width: 460px;
+    }
+
+    .cs-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .cs-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        flex-shrink: 0;
+    }
+
+    .cs-btn-light {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .cs-btn-light:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+
+    .cs-btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .cs-btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 97, 145, 0.2);
+    }
+
+    .cs-btn-outline {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    .cs-btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .alert-toast {
+        padding: 12px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    .alert-toast.success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .alert-toast.error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .course-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 97, 145, 0.15);
+    }
+
+    .course-card-top {
+        height: 120px;
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .course-card-top::after {
+        content: '';
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+        bottom: -50px;
+        right: -30px;
+    }
+
+    .course-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-card-body h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin: 0 0 6px;
+        line-height: 1.3;
+    }
+
+    .course-card-body .price {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .course-card-body .desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .course-card-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .course-card-actions a {
+        flex: 1;
+        justify-content: center;
+        padding: 9px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 56px 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state .icon {
+        font-size: 44px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 640px) {
+        .cs-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        .cs-header p {
+            max-width: 100%;
+        }
+
+        .catalog-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="cs-header">
+    <div>
+        <div class="cs-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Course Catalog
+        </div>
+        <h1>Our Courses</h1>
+        <p>Discover the best programming courses and start your learning journey.</p>
+    </div>
+    <a asp-action="MyCourses" class="cs-btn cs-btn-light">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        My Courses
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-toast success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert-toast error">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="icon">📚</div>
+        <h3>No courses available yet</h3>
+        <p>Check back soon for new courses from our instructors.</p>
+    </div>
+}
+else
+{
+    <div class="catalog-grid">
+        @foreach (var item in Model)
+        {
+            <div class="course-card">
+                <div class="course-card-top">
+                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" style="width:100%;height:100%;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <span>💻</span>
+                    }
+                </div>
+                <div class="course-card-body">
+                    <h3>@item.Name</h3>
+                    <div class="price">$@item.Price.ToString("N2")</div>
+                    <p class="desc">@item.Description</p>
+                    <div class="course-card-actions">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="cs-btn-outline" style="display:inline-block;">Details</a>
+                        @if (ViewBag.EnrolledCourseIds != null && ((List<Guid>)ViewBag.EnrolledCourseIds).Contains(item.Id))
+                        {
+                            <a asp-action="Index" asp-controller="Course" asp-route-id="@item.Id" class="cs-btn-primary" style="display:inline-block;color:white;">View Course</a>
+                        }
+                        else
+                        {
+                            <a asp-action="EnrollCourse" asp-route-courseId="@item.Id" class="cs-btn-primary" style="display:inline-block;color:white;">Enroll</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

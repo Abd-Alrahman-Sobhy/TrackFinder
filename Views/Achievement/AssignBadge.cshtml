@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Assign Badge";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><a asp-action="Badges">Badges</a><span>›</span><span>Assign</span></div>
+        <h1 class="page-title">Assign Badge</h1>
+        <p class="page-sub">Grant a specific achievement badge to a user profile.</p>
+    </div>
+</div>
+
+<div class="card" style="max-width:600px;">
+    <form asp-action="AssignBadge" method="post">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>Select User</label>
+                <select name="userId" class="form-control">
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <option value="@user.Id">@user.Username (@user.Role)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label>Select Badge</label>
+                <select name="badgeId" class="form-control">
+                    @foreach (var badge in ViewBag.Badges)
+                    {
+                        <option value="@badge.BadgeId">@badge.BadgeName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Assign Badge</button>
+            <a asp-action="Badges" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>

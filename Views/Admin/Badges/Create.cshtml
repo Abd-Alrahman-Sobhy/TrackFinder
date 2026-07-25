@@ -1,0 +1,34 @@
+@model TrackFinder.ViewModels.Achievements.CreateBadgeViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>New Badge</h3>
+<form asp-action="Create" asp-controller="Badges" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="BadgeName" class="form-label"></label>
+        <input asp-for="BadgeName" class="form-control" />
+        <span asp-validation-for="BadgeName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BadgeDescription" class="form-label"></label>
+        <textarea asp-for="BadgeDescription" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="BadgeDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label">Badge Image</label>
+        <input asp-for="Image" type="file" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary">Create</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Badges">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

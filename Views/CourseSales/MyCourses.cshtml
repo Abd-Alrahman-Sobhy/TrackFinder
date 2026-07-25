@@ -1,0 +1,328 @@
+@using TrackFinder.Models.CourseModels
+@model List<Course>
+
+@{
+    ViewData["Title"] = "My Learning";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .ml-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 36px 32px;
+        color: white;
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ml-header::before {
+        content: '';
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+        top: -80px;
+        right: -60px;
+    }
+
+    .ml-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 4px;
+    }
+
+    .ml-header p {
+        font-size: 14px;
+        opacity: 0.8;
+        margin: 0;
+    }
+
+    .ml-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .ml-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        flex-shrink: 0;
+    }
+
+    .ml-btn-light {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .ml-btn-light:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+
+    .ml-btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .ml-btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 97, 145, 0.2);
+    }
+
+    .ml-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    .ml-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ml-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 97, 145, 0.15);
+    }
+
+    .ml-card-top {
+        height: 100px;
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ml-card-top::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+        bottom: -40px;
+        right: -30px;
+    }
+
+    .ml-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ml-card-body h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin: 0 0 4px;
+    }
+
+    .ml-card-body .price {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .ml-card-body .desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 14px;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .progress-wrap {
+        margin-bottom: 14px;
+    }
+
+    .progress-wrap .bar-bg {
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .progress-wrap .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        border-radius: 99px;
+        width: 0%;
+    }
+
+    .progress-wrap .label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+        display: block;
+    }
+
+    .ml-card-body .view-btn {
+        display: block;
+        text-align: center;
+        padding: 9px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        background: var(--primary);
+        color: white;
+        transition: var(--transition);
+    }
+
+    .ml-card-body .view-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 56px 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state .icon {
+        font-size: 44px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 640px) {
+        .ml-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        .ml-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="ml-header">
+    <div>
+        <div class="ml-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            My Learning
+        </div>
+        <h1>My Learning</h1>
+        <p>Continue your enrolled courses and track your progress.</p>
+    </div>
+    <a asp-action="Index" class="ml-btn ml-btn-light">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Browse Courses
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="ml-grid">
+        @foreach (var item in Model)
+        {
+            <div class="ml-card">
+                <div class="ml-card-top">
+                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" style="width:100%;height:100%;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <span>📚</span>
+                    }
+                </div>
+                <div class="ml-card-body">
+                    <h3>@item.Name</h3>
+                    <div class="price">$@item.Price.ToString("N2")</div>
+                    <p class="desc">@item.Description</p>
+                    <div class="progress-wrap">
+                        <div class="bar-bg">
+                            <div class="bar-fill"></div>
+                        </div>
+                        <span class="label">Progress 0%</span>
+                    </div>
+                    <a asp-action="Index" asp-controller="Course" asp-route-id="@item.Id" class="view-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                        View Course
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="icon">📚</div>
+        <h3>You haven't enrolled in any course yet</h3>
+        <p>Browse our catalog and start your learning journey today.</p>
+        <a asp-action="Index" class="ml-btn ml-btn-primary" style="display:inline-flex;padding:10px 28px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Browse Courses
+        </a>
+    </div>
+}

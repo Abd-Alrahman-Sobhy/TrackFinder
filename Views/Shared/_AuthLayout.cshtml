@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Track Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary:             #006191;
+            --primary-dark:        #004b71;
+            --primary-container:   #007bb6;
+            --secondary:           #0b1c30;
+            --surface:             #f0f6ff;
+            --surface-low:         #e5eeff;
+            --on-surface:          #0b1c30;
+            --on-surface-variant:  #3f4850;
+            --outline:             #bfc7d2;
+            --error:               #ba1a1a;
+            --error-container:     #ffdad6;
+            --radius-sm:           8px;
+            --radius-lg:           16px;
+            --shadow-card:         0 2px 8px rgba(13,43,68,0.07), 0 12px 32px rgba(13,43,68,0.08);
+        }
+
+        body {
+            font-family: 'Hanken Grotesk', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #dce9ff 0%, #e8f2ff 40%, #c9dff7 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 16px 24px;
+            color: var(--on-surface);
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        /* ── Header ─────────────────────────────────────────────── */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(13,43,68,0.18);
+        }
+
+        .auth-brand {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .auth-tagline {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+            margin-top: 4px;
+        }
+
+        /* ── Card ───────────────────────────────────────────────── */
+        .auth-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            padding: 36px 40px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        .auth-footer {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .auth-footer p {
+            font-size: 13px;
+            color: var(--on-surface-variant);
+            margin-bottom: 6px;
+        }
+
+        .auth-footer a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 13px;
+            margin: 0 8px;
+        }
+
+        .auth-footer a:hover { color: var(--primary); }
+
+        /* ── Form elements ──────────────────────────────────────── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #6f7881;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid var(--outline);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--on-surface);
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            appearance: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,97,145,0.12);
+        }
+
+        .form-input.no-icon {
+            padding-left: 14px;
+        }
+
+        .form-input::placeholder { color: #a0aab4; }
+
+        .input-action {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6f7881;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-action:hover { color: var(--primary); }
+
+        /* ── Validation error ───────────────────────────────────── */
+        .field-error {
+            font-size: 12px;
+            color: var(--error);
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .alert-error {
+            background: var(--error-container);
+            border: 1px solid #f5c6c6;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #93000a;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background: #d6f0e0;
+            border: 1px solid #a3d9b8;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #1a5c35;
+            margin-bottom: 18px;
+        }
+
+        /* ── Buttons ────────────────────────────────────────────── */
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,97,145,0.28);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: var(--surface-low);
+            color: var(--primary);
+            border: 1.5px solid var(--outline);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #d3e4fe;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ── Toggle (Student/Instructor) ────────────────────────── */
+        .role-toggle {
+            display: flex;
+            background: var(--surface-low);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .role-toggle-btn {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            color: var(--on-surface-variant);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+
+        .role-toggle-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,97,145,0.25);
+        }
+
+        /* ── Divider ─────────────────────────────────────────────── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 22px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--outline);
+        }
+
+        .divider-text {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #a0aab4;
+            white-space: nowrap;
+        }
+
+        /* ── Select ──────────────────────────────────────────────── */
+        select.form-input {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236f7881' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* ── File upload ─────────────────────────────────────────── */
+        .file-upload-area {
+            border: 2px dashed var(--outline);
+            border-radius: var(--radius-sm);
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .file-upload-area:hover,
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: #f0f6ff;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-icon { font-size: 28px; margin-bottom: 8px; }
+        .file-upload-text { font-size: 14px; color: var(--on-surface-variant); }
+        .file-upload-text strong { color: var(--primary); }
+        .file-upload-hint { font-size: 12px; color: #a0aab4; margin-top: 4px; }
+        .file-upload-name { font-size: 13px; color: var(--primary); font-weight: 500; margin-top: 6px; }
+
+        /* ── Instructor info box ─────────────────────────────────── */
+        .info-box {
+            background: #e5eeff;
+            border-left: 3px solid var(--primary);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--on-surface-variant);
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        /* ── OTP inputs ──────────────────────────────────────────── */
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .otp-input {
+            width: 52px;
+            height: 60px;
+            border: 1.5px solid var(--outline);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            caret-color: var(--primary);
+        }
+
+        .otp-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,97,145,0.12);
+        }
+
+        @@media (max-width: 520px) {
+            .auth-card { padding: 28px 20px; }
+            .otp-input { width: 42px; height: 52px; font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        @RenderBody()
+    </div>
+
+    <footer class="auth-footer">
+        <p>&copy; @DateTime.Now.Year Track Finder. All rights reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

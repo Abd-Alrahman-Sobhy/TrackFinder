@@ -1,0 +1,44 @@
+﻿@model List<TrackFinder.Models.AchievementModels.StudentCertificate>
+@{
+    ViewData["Title"] = "My Certificates";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <div class="breadcrumb"><a asp-action="Index">Achievements</a><span>›</span><span>My Certificates</span></div>
+        <h1 class="page-title">My Earned Certificates</h1>
+        <p class="page-sub">A complete list of your verified technical mastery achievements.</p>
+    </div>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="card" style="text-align:center;padding:48px;">
+        <div style="font-size:48px;margin-bottom:12px;opacity:0.4;">📜</div>
+        <h3 style="font-weight:700;color:var(--secondary);margin-bottom:6px;">No certificates yet</h3>
+        <p style="color:var(--text-muted);">You haven't earned any certificates yet. Keep learning!</p>
+    </div>
+}
+else
+{
+    <div style="display:flex;flex-wrap:wrap;gap:20px;">
+        @foreach (var cert in Model)
+        {
+            <div style="width:280px;background:var(--surface);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--border);display:flex;flex-direction:column;">
+                <div style="width:40px;height:40px;background:var(--primary);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div style="font-weight:700;color:var(--secondary);font-size:15px;margin-bottom:8px;">@cert.Certificate?.Title</div>
+                <div style="font-size:13px;color:var(--text-muted);line-height:1.4;flex:1;">@cert.Certificate?.Description</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+                    <a href="@cert.Certificate?.CertificateUrl" target="_blank" style="color:var(--primary);font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        View PDF
+                    </a>
+                    <small style="color:var(--text-muted);font-size:12px;">@cert.IssuedAt.ToString("dd MMM yyyy")</small>
+                </div>
+            </div>
+        }
+    </div>
+}

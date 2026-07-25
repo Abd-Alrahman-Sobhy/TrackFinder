@@ -1,0 +1,170 @@
+@model TrackStackVM
+@{
+    ViewData["Title"] = "Stack Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .sd-hero {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+        border-radius: var(--radius-lg);
+        padding: 28px 24px;
+        color: white;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sd-hero::before {
+        content: '';
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        top: -60px;
+        right: -60px;
+    }
+
+    .sd-hero h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 4px;
+    }
+
+    .sd-hero p {
+        font-size: 13px;
+        opacity: 0.8;
+        margin: 0;
+    }
+
+    .sd-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    .tool-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .tool-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 97, 145, 0.15);
+    }
+
+    .tool-card .name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .tool-card .name .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        flex-shrink: 0;
+    }
+
+    .tool-card .desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state .icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    @@media (max-width: 640px) {
+        .tools-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="sd-hero">
+    <div class="sd-kicker">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        Stack Details
+    </div>
+    <h1>@Model.StackName</h1>
+    <p>@Model.StackDescription</p>
+</div>
+
+@if (Model.Tools == null || !Model.Tools.Any())
+{
+    <div class="empty-state">
+        <div class="icon">🔧</div>
+        <h3>No tools available</h3>
+        <p>No tools are currently exposed for this stack.</p>
+    </div>
+}
+else
+{
+    <div class="tools-grid">
+        @foreach (var tool in Model.Tools)
+        {
+            <div class="tool-card">
+                <div class="name">
+                    <span class="badge-dot"></span>
+                    @tool
+                </div>
+                <p class="desc">
+                    TODO: the current view model exposes the tool name only. Add tool descriptions when the backend provides them.
+                </p>
+            </div>
+        }
+    </div>
+}

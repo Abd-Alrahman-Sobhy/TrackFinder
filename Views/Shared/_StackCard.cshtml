@@ -1,0 +1,30 @@
+@model TrackStackVM
+
+<article class="stack-card card h-100 border-0 rounded-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            <div>
+                <div class="section-kicker mb-2">Stack</div>
+                <h3 class="h5 text-brand-ink mb-0">@Model.StackName</h3>
+            </div>
+            <span class="stack-index">#@Model.Id</span>
+        </div>
+
+        <p class="text-brand-muted mb-4">@Model.StackDescription</p>
+
+        <div class="mini-label mb-2">Related tools</div>
+        <div class="d-flex flex-wrap gap-2">
+            @if (Model.Tools?.Any() == true)
+            {
+                foreach (var tool in Model.Tools)
+                {
+                    <partial name="_ToolCard" model="tool" />
+                }
+            }
+            else
+            {
+                <span class="text-brand-muted small">No tools exposed by the current data model.</span>
+            }
+        </div>
+    </div>
+</article>

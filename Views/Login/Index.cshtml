@@ -1,0 +1,126 @@
+@model TrackFinder.ViewModels.Auth_ViewModels.LoginVM
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<!-- ── Header ─────────────────────────────────────────────────── -->
+<div class="auth-header">
+    <img src="~/images/Logo.png" alt="Track Finder Logo" class="auth-logo" />
+    <div class="auth-brand">Track Finder</div>
+    <div class="auth-tagline">CS Learning Portal</div>
+</div>
+
+<!-- ── Card ──────────────────────────────────────────────────── -->
+<div class="auth-card">
+    <h1 style="font-size:22px;font-weight:700;color:#0b1c30;margin-bottom:20px;">Sign In</h1>
+
+    @* Success message from OTP verification / registration *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-success">✓ @TempData["SuccessMessage"]</div>
+    }
+
+    @* Global error (from ModelState) *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            @Html.ValidationSummary(true, null, new { @class = "" })
+        </div>
+    }
+
+    <form asp-action="Index" asp-controller="Login" method="post" id="loginForm" novalidate>
+        @Html.AntiForgeryToken()
+
+        <!-- Email -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Email">Email Address</label>
+            <div class="input-wrapper">
+                <span class="input-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+                </span>
+                <input asp-for="Email" class="form-input" type="email"
+                       id="emailInput" placeholder="name@university.edu" autocomplete="email" />
+            </div>
+            <span asp-validation-for="Email" class="field-error"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label class="form-label" style="margin:0;" asp-for="Password">Password</label>
+                <a href="/Login/ForgotPassword" style="font-size:13px;color:#006191;text-decoration:none;font-weight:500;">Forgot Password?</a>
+            </div>
+            <div class="input-wrapper">
+                <span class="input-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input asp-for="Password" class="form-input" type="password"
+                       id="passwordInput" placeholder="••••••••" autocomplete="current-password" />
+                <button type="button" class="input-action" id="togglePassword" title="Show/hide password">
+                    <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+            </div>
+            <span asp-validation-for="Password" class="field-error"></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary" id="signInBtn">Sign Into Portal</button>
+
+        <!-- Divider -->
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">NEW TO THE PLATFORM?</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Register Link -->
+        <a href="/Registration" class="btn-secondary" id="createAccountBtn">Create an Account</a>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+    // ── Role Toggle ───────────────────────────────────────────────────
+    function setRole(role) {
+        document.getElementById('roleInput').value = role;
+
+        const btnStudent    = document.getElementById('btn-student');
+        const btnInstructor = document.getElementById('btn-instructor');
+
+        if (role === 'Student') {
+            btnStudent.classList.add('active');
+            btnInstructor.classList.remove('active');
+            btnStudent.setAttribute('aria-pressed', 'true');
+            btnInstructor.setAttribute('aria-pressed', 'false');
+        } else {
+            btnInstructor.classList.add('active');
+            btnStudent.classList.remove('active');
+            btnInstructor.setAttribute('aria-pressed', 'true');
+            btnStudent.setAttribute('aria-pressed', 'false');
+        }
+    }
+
+    // ── Password Toggle ───────────────────────────────────────────────
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const input   = document.getElementById('passwordInput');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const isHidden = input.type === 'password';
+
+        input.type = isHidden ? 'text' : 'password';
+        eyeIcon.innerHTML = isHidden
+            ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+            : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    });
+
+    // ── Submit loading state ──────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', function () {
+        const btn = document.getElementById('signInBtn');
+        setTimeout(function () {
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
+        }, 100);
+    });
+</script>
+}

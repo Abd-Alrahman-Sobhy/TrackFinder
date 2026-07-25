@@ -1,0 +1,20 @@
+@model TrackFinder.ViewModels.Settings.SettingsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Edit Setting</h3>
+<form asp-action="Edit" asp-controller="Settings" method="post" asp-route-id="@ViewBag.Id">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Value" class="form-label"></label>
+        <input asp-for="Value" class="form-control" />
+        <span asp-validation-for="Value" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Settings">Cancel</a>
+
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
+</form>

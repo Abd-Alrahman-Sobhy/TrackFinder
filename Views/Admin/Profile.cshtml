@@ -1,0 +1,171 @@
+﻿@model TrackFinder.ViewModels.Users.UserDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow rounded-4">
+
+            <div class="card-body text-center p-4">
+
+                @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                {
+                    <img src="@Model.ProfilePictureUrl"
+                         class="rounded-circle shadow mb-3"
+                         style="width:160px;height:160px;object-fit:cover;">
+                }
+                else
+                {
+                    <img src="https://ui-avatars.com/api/?name=@Model.FirstName+@Model.LastName&background=4f46e5&color=fff&size=256"
+                         class="rounded-circle shadow mb-3"
+                         style="width:160px;height:160px;">
+                }
+
+                <h3 class="fw-bold">
+                    @Model.FirstName @Model.LastName
+                </h3>
+
+                <div class="text-muted mb-3">
+                    @("@")@Model.Username
+                </div>
+
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    @Model.Role
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-8">
+
+        <div class="card border-0 shadow rounded-4">
+
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h4 class="fw-bold mb-0">
+                        Admin Profile
+                    </h4>
+
+                    <a asp-action="EditProfile"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Edit Profile
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card-body px-4">
+
+                <div class="row gy-4">
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            First Name
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.FirstName
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Last Name
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.LastName
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Username
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Username
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Email
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Email
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Birthdate
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Birthdate.ToString("dd MMM yyyy")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Gender
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Gender
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label class="text-muted small">
+                            Bio
+                        </label>
+
+                        <div class="border rounded-3 bg-light p-3">
+
+                            @(string.IsNullOrWhiteSpace(Model.Bio)
+                                                        ? "No bio available."
+                                                        : Model.Bio)
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

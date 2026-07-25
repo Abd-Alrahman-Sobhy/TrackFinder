@@ -1,0 +1,16 @@
+@model TrackFinder.ViewModels.Communities.CommunityDetailsViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Delete Community</h3>
+<form asp-action="DeleteConfirmed" asp-controller="Communities" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div class="alert alert-danger">Are you sure you want to delete <strong>@Model.Name</strong>?</div>
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary ms-2" asp-action="Index" asp-controller="Communities">Cancel</a>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
